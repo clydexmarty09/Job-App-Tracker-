@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     }
 
     await db.execute(
-      `INSERT INT users(id, email, password_hash)
+      `INSERT INTO users(id, email, password_hash)
         VALUE (?, ?, ?)`,
       [uid, email, pw_hash],
     );
