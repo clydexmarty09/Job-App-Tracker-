@@ -17,23 +17,56 @@ export default function Register() {
 
         try {
 
-        } catch (error) {
-            setError("Invalid ")
+            const res = await fetch("/api/auth/register", {
+                method:"POST", 
+                headers: {
+                    "Content-Type": "application/json", 
+                }, 
+                body: JSON.stringify({
+                    email, password, 
+                }), 
+            }); 
+
+            const data = await res.json()
+            if(!res.ok) {
+                setError(data.error || "Registration Failed")
+                return; 
+            }
+
+            console.log(data); 
+
+            router.push("/login"); 
+
+        } catch {
+            setError("Registration failed"); 
+
+        } finally {
+            setLoading(false); 
         }
     }
 
     return(
         <main> 
             <h1> REGISTER </h1>
-            <form> 
+            <form onSubmit={handleSubmit}> 
                 <input
                 placeholder="Email"
+                value={email}
+                type="email"
+                onChange={(e)=> setEmail(e.target.value)}
                 />
                 <input
                 placeholder="Password"
+                value={password}
+                type="password"
+                onChange={(e)=> setPassword(e.target.value)}
                 />
-                <button> Create Account</button>
+                <button type="submit" disabled={loading}> 
+                {loading ? "Registering..." : "Register"}
+                </button>
             </form>
+
+            {error && <p> {error} </p>}
         </main>
 
     ); 

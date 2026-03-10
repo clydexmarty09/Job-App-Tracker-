@@ -10,8 +10,6 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { email, password } = body; // destructuring: pulls email and pw out of body
     const uid = crypto.randomUUID();
-    const pw_hash = await bcrypt.hash(password, 10);
-    //const created_at = Date.now() not needed because SQL table already has it
 
     if (!email || !password) {
       return NextResponse.json(
@@ -20,14 +18,18 @@ export async function POST(request: Request) {
       );
     }
 
+    const pw_hash = await bcrypt.hash(password, 10);
+    //const created_at = Date.now() not needed because SQL table already has it
+
     await db.execute(
       `INSERT INTO users(id, email, password_hash)
-        VALUE (?, ?, ?)`,
+        VALUES (?, ?, ?)`,
       [uid, email, pw_hash],
     );
 
     return NextResponse.json({ ok: true });
-  } catch {
+  } catch (error) {
+    console.error("REGISTRATION ERROR", error);
     return NextResponse.json({ error: "Registration failed" }, { status: 400 });
   }
 }
