@@ -228,10 +228,22 @@ export default function Dashboard() {
                 <div className="pt-4 flex flex-col text-xs gap-4">   
                     {applications.map((app)=> (
                         <div className="grid grid-cols-5 gap-10 items-center" key={app.id}> 
-                        <p> Company: <span> {app.company} </span> </p>
-                        <p> Position: <span> {app.position} </span> </p>
-                        <p> Pay: <span> {app.pay ?? "No pay listed"} </span> </p>
+                        <p> Company: <span className="text-gray-800/70"> {app.company} </span> </p>
+                        <p> Position: <span className="text-gray-800/70"> {app.position} </span> </p>
+                        <p> Pay: <span className="text-green-700"> {app.pay ?? "No pay listed"} </span> </p>
+                        
                         <select
+                        className={
+                            app.status == "Offer" ? 
+                            "text-green-700"
+                            : app.status === "Rejected" ? 
+                             "text-red-700" 
+                            : app.status === "Interviewed" ?
+                            "text-blue-700" 
+                            : app.status === "Applied" ? 
+                            "text-amber-500"
+                            : "text-gray-700/70"
+                        }
                         value={app.status ?? ""}
                         onChange={(e)=> handleStatusChange(app.id, e.target.value)}> 
 
@@ -243,7 +255,7 @@ export default function Dashboard() {
                         
                         </select>
 
-                        <button className="hover:scale-105 transition border border-gray-500 p-2 rounded" onClick={()=> handleDelete(app.id)}> DELETE</button>
+                        <button className="hover:scale-105 transition border border-gray-500 p-2 rounded font-semibold" onClick={()=> handleDelete(app.id)}> DELETE</button>
                         
                         </div>
                     ))}
