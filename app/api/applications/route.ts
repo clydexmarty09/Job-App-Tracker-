@@ -37,3 +37,21 @@ export async function GET(request: Request) {
     );
   }
 }
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { company, pay, status, position, userId } = body;
+    const id = crypto.randomUUID();
+
+    await db.execute(
+      `INSERT INTO applications(id, user_id, company, position, pay, status)
+      VALUES (?,?,?,?,?,?)`,
+      [id, userId, company, position, pay, status],
+    );
+
+    return NextResponse.json({ ok: true });
+  } catch {
+    return NextResponse.json({ error: "Cannot insert data" }, { status: 500 });
+  }
+}
