@@ -1,7 +1,24 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
-export async function DELETE(params: Request) {
+// DELETE route expects requests like DELETE /api/applications/abc123
+export async function DELETE(
+  request: Request,
+  context: {
+    params: { id: string };
+  },
+) {
   try {
-  } catch {}
+    const { id } = context.params;
+
+    await db.execute(
+      `DELETE FROM applications
+            WHERE id = ?`,
+      [id],
+    );
+
+    return NextResponse.json({ ok: true });
+  } catch {
+    return NextResponse.json({ error: "Cannot delete data" }, { status: 500 });
+  }
 }
