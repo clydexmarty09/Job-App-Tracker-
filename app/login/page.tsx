@@ -1,6 +1,7 @@
 "use client"; 
 import { useState } from "react"; 
 import { useRouter } from "next/navigation";
+import Link from "next/link"; 
 
 export default function Login() {
     
@@ -36,12 +37,13 @@ export default function Login() {
    
    
     return(
-        <main> 
-            <h1> LOGIN</h1>
+        <main className="min-h-screen m-auto p-4 flex flex-col items-center"> 
+            <h1 className="font-medium text-2xl p-3"> LOGIN</h1>
 
 
-        <form onSubmit={handleSubmit}> 
+        <form className="flex gap-20 p-4" onSubmit={handleSubmit}> 
             <input
+            className="border border-gray-300 rounded-md p-2"
              type="email"
              value={email}
              onChange={(e)=> setEmail(e.target.value)}
@@ -49,16 +51,19 @@ export default function Login() {
              /> 
 
              <input
+             className="border border-gray-300 rounded-md p-2"
              type="password"
              value={password}
              onChange={(e)=> setPassword(e.target.value)}
              placeholder="Password"
              />
 
-             <button type="submit"> Login </button>
+             <button className="transition hover:scale-105 text-center border rounded w-20 p-3 border-gray-500 bg-blue-300/60" type="submit"> Login </button>
         </form>
 
-        {error && <p> {error} </p>}
+         <p className="text-xs text-gray-700 mt-auto p-5"> Don't have an account? <span> <Link className="text-blue-500/80 hover:underline" href="/register"> Register </Link> instead </span> </p>
+
+        {error && <p className="text-red-600 text-xs p-2"> {error} </p>}
         </main>
 
     ); 

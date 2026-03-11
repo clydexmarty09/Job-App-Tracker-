@@ -171,14 +171,19 @@ export default function Dashboard() {
     return (
 
        
-        <main> 
-            <button onClick={()=> logOut()}> Log Out  </button>
-            <h1> DASHBOARD</h1>
+        <main className="min-h-screen m-auto p-5 flex flex-col items center"> 
+
+        <div> 
+               <button className="underline text-lg hover:text-blue-400" onClick={()=> logOut()}> Log Out  </button>
+        </div>
+         
+            <h1 className="pt-10 text-3xl font-semibold"> DASHBOARD</h1>
 
             { error && <p> {error}</p>}
-            <form onSubmit={handleApplication}> 
+            <form className="flex gap-6 py-4" onSubmit={handleApplication}> 
             
             <input
+            className="border border-gray-400 rounded"
             value={company}
             type="text"
             placeholder="Insert company"
@@ -186,6 +191,7 @@ export default function Dashboard() {
             />
 
             <input
+            className="border border-gray-400 rounded"
             value={position}
             type="text"
             placeholder="Insert position"
@@ -193,20 +199,22 @@ export default function Dashboard() {
             />
 
             <input
+            className="border border-gray-400 rounded"
             value={pay}
             type="number"
-            placeholder="Insert pay if applicable"
+            placeholder="Insert pay"
             onChange={(e)=> setPay(e.target.value)}
             /> 
 
             <input
+            className="border border-gray-400 rounded"
             value={status}
             type="status"
             placeholder="Status"
             onChange={(e)=> setStatus(e.target.value)}
             />
 
-            <button type="submit" disabled={loading}> 
+            <button className="hover:scale-105 transition border rounded-md border-gray-500 bg-blue-300/60 p-2 " type="submit" disabled={loading}> 
                 {loading ? "Saving..." : "Add Application"}
             </button>
 
@@ -215,14 +223,14 @@ export default function Dashboard() {
             {loading ? (
                 <p> Loading... </p> ) : 
             applications.length === 0 ? (
-                <p> No applications yet. </p>
+                <p className="text-red-600/80"> No applications yet. </p>
             ): (
-                <div>   
+                <div className="pt-4 flex flex-col text-xs gap-4">   
                     {applications.map((app)=> (
-                        <div key={app.id}> 
-                        <p> {app.company}  </p>
-                        <p> {app.position} </p>
-                        <p> {app.pay ?? "No pay listed"} </p>
+                        <div className="grid grid-cols-5 gap-10 items-center" key={app.id}> 
+                        <p> Company: <span> {app.company} </span> </p>
+                        <p> Position: <span> {app.position} </span> </p>
+                        <p> Pay: <span> {app.pay ?? "No pay listed"} </span> </p>
                         <select
                         value={app.status ?? ""}
                         onChange={(e)=> handleStatusChange(app.id, e.target.value)}> 
@@ -235,7 +243,7 @@ export default function Dashboard() {
                         
                         </select>
 
-                        <button onClick={()=> handleDelete(app.id)}> DELETE</button>
+                        <button className="hover:scale-105 transition border border-gray-500 p-2 rounded" onClick={()=> handleDelete(app.id)}> DELETE</button>
                         
                         </div>
                     ))}

@@ -1,6 +1,7 @@
 "use client"; 
 import { useEffect, useState } from "react"; 
 import { useRouter } from "next/navigation"; 
+import Link from "next/link";
 
 export default function Register() {
 
@@ -63,10 +64,12 @@ export default function Register() {
                 type="password"
                 onChange={(e)=> setPassword(e.target.value)}
                 />
-                <button className="border rounded border-gray-500 bg-blue-300/60 p-3" type="submit" disabled={loading}> 
+                <button className="hover:scale-105 transition w-40 border rounded border-gray-500 bg-blue-300/60 p-3" type="submit" disabled={loading}> 
                 {loading ? "Registering..." : "Register"}
                 </button>
             </form>
+
+            <p className="text-xs text-gray-700 mt-auto p-5"> Have an account? <span> <Link className="text-blue-500/80 hover:underline" href="/login"> Log In </Link> instead </span> </p>
 
             {error && <p> {error} </p>}
         </main>
