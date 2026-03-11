@@ -46,22 +46,24 @@ export default function Register() {
     }
 
     return(
-        <main> 
-            <h1> REGISTER </h1>
-            <form onSubmit={handleSubmit}> 
+        <main className="min-h-screen m-auto p-4 flex flex-col items-center"> 
+            <h1 className="text-2xl font-medium p-3"> REGISTER </h1>
+            <form className="p-4 flex gap-20" onSubmit={handleSubmit}> 
                 <input
+                className="border rounded-md p-2 border-gray-300"
                 placeholder="Email"
                 value={email}
                 type="email"
                 onChange={(e)=> setEmail(e.target.value)}
                 />
                 <input
+                className="border rounded-md p-2 border-gray-300"
                 placeholder="Password"
                 value={password}
                 type="password"
                 onChange={(e)=> setPassword(e.target.value)}
                 />
-                <button type="submit" disabled={loading}> 
+                <button className="border rounded border-gray-500 bg-blue-300/60 p-3" type="submit" disabled={loading}> 
                 {loading ? "Registering..." : "Register"}
                 </button>
             </form>

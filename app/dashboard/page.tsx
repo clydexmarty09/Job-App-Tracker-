@@ -1,5 +1,6 @@
 "use client"; 
 import { useState, useEffect } from "react"; 
+import { useRouter } from "next/navigation";
 
 type Application = {
     id: string; 
@@ -11,6 +12,7 @@ type Application = {
 
 export default function Dashboard() {
 
+    const router = useRouter(); // for checking proper proper user log in
 
     const [error, setError] = useState(""); 
     const [applications, setApplications] = useState<Application[]>([]) 
@@ -148,13 +150,29 @@ export default function Dashboard() {
         await fetchApplications(); 
     }
 
+    function logOut() {
+        localStorage.removeItem("userId"); 
+        router.push("/login"); 
+    }
+
     useEffect(()=> {
         fetchApplications(); 
     }, [])
 
+    useEffect(()=> {
+        const userId = localStorage.getItem("userId"); 
+
+        if(!userId) {
+            router.push("/login"); 
+        }
+    }, [])
+
 
     return (
+
+       
         <main> 
+            <button onClick={()=> logOut()}> Log Out  </button>
             <h1> DASHBOARD</h1>
 
             { error && <p> {error}</p>}
