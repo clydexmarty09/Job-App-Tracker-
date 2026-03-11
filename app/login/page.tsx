@@ -31,7 +31,7 @@ export default function Login() {
             return; 
         }
 
-        localStorage.setItem("userId", data.user.id);  // saves logged in user's ID in the browser's local storage
+        //localStorage.setItem("userId", data.user.id);  // saves logged in user's ID in the browser's local storage
         router.push("/dashboard");  // naviagtes user to dashboard page 
     }
    

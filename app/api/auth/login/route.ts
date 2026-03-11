@@ -55,12 +55,25 @@ export async function POST(request: Request) {
       );
     }
 
-    return NextResponse.json({
+    // return NextResponse.json({
+    //   ok: true,
+    //   user: {
+    //     id: user.id,
+    //     email: user.email,
+    //   },
+    // });
+
+    const response = NextResponse.json({
       ok: true,
       user: {
         id: user.id,
         email: user.email,
       },
+    });
+
+    response.cookies.set("session", user.id, {
+      httpOnly: true,
+      path: "/",
     });
   } catch {
     return NextResponse.json({ error: "Login failed" }, { status: 400 });
