@@ -28,7 +28,7 @@ export async function PATCH(
   context: { params: { id: string } },
 ) {
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
     const body = await request.json();
     const { status } = body;
 

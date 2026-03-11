@@ -205,7 +205,17 @@ export default function Dashboard() {
                         <p> {app.company}  </p>
                         <p> {app.position} </p>
                         <p> {app.pay ?? "No pay listed"} </p>
-                        <p> {app.status || "No status"} </p>
+                        <select
+                        value={app.status ?? ""}
+                        onChange={(e)=> handleStatusChange(app.id, e.target.value)}> 
+
+                            <option value=""> No Status </option>
+                            <option value="Applied"> Applied </option>
+                            <option value="Interviewed"> Interviewed </option>
+                            <option value="Offer"> Offer </option>
+                            <option value="Rejected"> Rejected </option>
+                        
+                        </select>
 
                         <button onClick={()=> handleDelete(app.id)}> DELETE</button>
                         
