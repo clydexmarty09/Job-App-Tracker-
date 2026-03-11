@@ -22,3 +22,25 @@ export async function DELETE(
     return NextResponse.json({ error: "Cannot delete data" }, { status: 500 });
   }
 }
+
+export async function PATCH(
+  request: Request,
+  context: { params: { id: string } },
+) {
+  try {
+    const { id } = context.params;
+    const body = await request.json();
+    const { status } = body;
+
+    await db.execute(
+      `UPDATE applications
+            SET status = ?
+            WHERE id = ?`,
+      [status, id],
+    );
+
+    return NextResponse.json({ ok: true });
+  } catch {
+    return NextResponse.json({ error: "Cannot updated data" }, { status: 500 });
+  }
+}
