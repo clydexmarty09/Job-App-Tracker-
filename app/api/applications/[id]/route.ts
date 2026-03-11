@@ -9,7 +9,7 @@ export async function DELETE(
   },
 ) {
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
 
     await db.execute(
       `DELETE FROM applications

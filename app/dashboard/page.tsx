@@ -97,6 +97,57 @@ export default function Dashboard() {
         }
     }
 
+    // this function handles deleting the entire application from DB 
+    async function handleDelete(id: string) {
+        // send DELETE 
+
+        setError(""); 
+
+        try {
+            const res = await fetch(`/api/applications/${id}`,{
+
+                method: "DELETE", 
+            }); 
+
+        
+        if (!res.ok) {
+            throw new Error("Cannot delete data"); 
+        }
+            await fetchApplications(); 
+        }
+        // if successful, fetchApplications 
+      
+
+        catch {
+            setError("Cannot delete data"); 
+        }
+    }
+
+    // This function handles updating the status of the application
+    async function handleStatusChange( id: string, newChange: string) {
+        setError(""); 
+
+        const res = await fetch(`/api/applications/${id}`, 
+            {
+                method: "PATCH", 
+                headers: {
+                    "Content-Type": "applications/json", 
+                }, 
+                body: JSON.stringify({
+                    status: newChange, 
+                }),
+            }
+        ); 
+
+        const data = await res.json(); 
+        if(!data.ok) {
+            setError(data.error || "Update failed"); 
+            return; 
+        }
+
+        await fetchApplications(); 
+    }
+
     useEffect(()=> {
         fetchApplications(); 
     }, [])
@@ -155,8 +206,12 @@ export default function Dashboard() {
                         <p> {app.position} </p>
                         <p> {app.pay ?? "No pay listed"} </p>
                         <p> {app.status || "No status"} </p>
+
+                        <button onClick={()=> handleDelete(app.id)}> DELETE</button>
+                        
                         </div>
                     ))}
+
                 </div>
         )}
         </main>
