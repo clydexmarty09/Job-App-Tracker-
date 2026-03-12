@@ -90,6 +90,6 @@ export async function POST(request: Request) {
 
     return response;
   } catch {
-    return NextResponse.json({ error: "Login failed" }, { status: 400 });
+    return NextResponse.json({ error: "Login failed" }, { status: 500 });
   }
 }
