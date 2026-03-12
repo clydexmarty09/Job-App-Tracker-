@@ -17,7 +17,6 @@ export default function Dashboard() {
     const [error, setError] = useState(""); 
     const [applications, setApplications] = useState<Application[]>([]) 
     const [loading, setLoading] = useState(false) ;
-    
     const [company, setCompany] = useState("");
     const [pay, setPay] =  useState(""); 
     const [status, setStatus] = useState(""); 
@@ -26,17 +25,17 @@ export default function Dashboard() {
     async function fetchApplications() {
         setLoading(true); 
         setError(""); 
-        const id = localStorage.getItem("userId") 
+        // const id = localStorage.getItem("userId") 
 
-        if(!id) {
-            setError("Cannot retrieve data")
-            setLoading(false); 
+        // if(!id) {
+        //     setError("Cannot retrieve data")
+        //     setLoading(false); 
 
-            return
-        }
+        //     return
+        // }
 
         try {
-            const response = await fetch(`/api/applications/?userId=${id}`); 
+            const response = await fetch(`/api/applications`); 
             const data = await response.json()
 
             if(!response.ok) {
@@ -59,13 +58,13 @@ export default function Dashboard() {
         setError("");
         setLoading(true);  
 
-        const userId = localStorage.getItem("userId"); 
+        // const userId = localStorage.getItem("userId"); 
 
-        if(!userId) {
-            setError("You musut be logged in"); 
-            setLoading(false); 
-            return; 
-        }
+        // if(!userId) {
+        //     setError("You musut be logged in"); 
+        //     setLoading(false); 
+        //     return; 
+        // }
 
         try {
             const res =  await fetch("/api/applications", {
@@ -74,7 +73,7 @@ export default function Dashboard() {
                     "Content-Type": "application/json", 
                 }, 
                 body: JSON.stringify({
-                    userId, company, position, status, pay: pay ? Number(pay) : null, 
+                    company, position, status, pay: pay ? Number(pay) : null, 
                 }),
                 
             }); 
@@ -129,43 +128,63 @@ export default function Dashboard() {
     async function handleStatusChange( id: string, newChange: string) {
         setError(""); 
 
-        const res = await fetch(`/api/applications/${id}`, 
-            {
-                method: "PATCH", 
-                headers: {
-                    "Content-Type": "applications/json", 
-                }, 
-                body: JSON.stringify({
-                    status: newChange, 
-                }),
-            }
-        ); 
+        try {
+            const res = await fetch(`/api/applications/${id}`, 
+                {
+                    method: "PATCH", 
+                    headers: {
+                        "Content-Type": "application/json", 
+                    }, 
+                    body: JSON.stringify({
+                        status: newChange, 
+                    }),
+                }
+            ); 
 
-        const data = await res.json(); 
-        if(!data.ok) {
-            setError(data.error || "Update failed"); 
-            return; 
+            const data = await res.json(); 
+            if(!res.ok) {
+                setError(data.error || "Update failed"); 
+                return; 
+            }
+
+          await fetchApplications(); 
+        } catch {
+            setError("Update failed"); 
         }
 
-        await fetchApplications(); 
     }
 
-    function logOut() {
-        localStorage.removeItem("userId"); 
-        router.push("/login"); 
-    }
+    async function logOut() {
 
-    useEffect(()=> {
-        fetchApplications(); 
-    }, [])
-
-    useEffect(()=> {
-        const userId = localStorage.getItem("userId"); 
-
-        if(!userId) {
+        try {
+            await fetch("/api/auth/logout", {
+                method: "POST", 
+            }); 
+        } finally {
             router.push("/login"); 
         }
-    }, [])
+    }
+
+    useEffect(()=> {
+        //fetchApplications(); 
+
+        async function checkAuth() {
+            try {
+                const res = await fetch("/api/auth/me"); 
+
+                if(!res.ok) {
+                    router.push("/login"); 
+                    return; 
+                }
+
+                await fetchApplications(); 
+            } catch {
+                router.push("/login"); 
+            }
+        }
+
+        checkAuth();
+    }, [router])    
 
 
     return (
