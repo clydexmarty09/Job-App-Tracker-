@@ -154,14 +154,14 @@ export default function Dashboard() {
 
     }
 
-    async function logOut() {
+    async function logOut() { 
 
         try {
-            await fetch("/api/auth/logout", {
-                method: "POST", 
+            await fetch("/api/auth/logout", { // sends POST to /api/auh/logout
+                method: "POST",  // server kills session and clears cookie
             }); 
         } finally {
-            router.push("/login"); 
+            router.push("/login");   // frontend goes to login no matter what 
         }
     }
 
@@ -170,9 +170,9 @@ export default function Dashboard() {
 
         async function checkAuth() {
             try {
-                const res = await fetch("/api/auth/me"); 
+                const res = await fetch("/api/auth/me");  // sends request-> backend reads session cookie 
 
-                if(!res.ok) {
+                if(!res.ok) { // check if valid 
                     router.push("/login"); 
                     return; 
                 }
@@ -190,7 +190,7 @@ export default function Dashboard() {
     return (
 
        
-        <main className="min-h-screen m-auto p-5 flex flex-col items center"> 
+        <main className="min-h-screen m-auto p-5 flex flex-col items-endcenter"> 
 
         <div> 
                <button className="underline text-lg hover:text-blue-400" onClick={()=> logOut()}> Log Out  </button>
@@ -228,7 +228,7 @@ export default function Dashboard() {
             <input
             className="border border-gray-400 rounded"
             value={status}
-            type="status"
+            type="text"
             placeholder="Status"
             onChange={(e)=> setStatus(e.target.value)}
             />
