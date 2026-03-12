@@ -50,10 +50,19 @@ export async function POST(request: Request) {
 
     if (!pw_match) {
       return NextResponse.json(
-        { error: "Incorrect password" },
+        { error: "Invalid username or password" },
         { status: 400 },
       );
     }
+
+    const sessionId = crypto.randomUUID(); // make a unique id for the session
+
+    // insert into sessions table
+    await db.execute(
+      `INSERT INTO sessions (id, user_id)
+      VALUES (?,?)`,
+      [sessionId, user.id],
+    );
 
     // return NextResponse.json({
     //   ok: true,
@@ -71,10 +80,15 @@ export async function POST(request: Request) {
       },
     });
 
-    response.cookies.set("session", user.id, {
-      httpOnly: true,
-      path: "/",
+    // set the cookie
+    response.cookies.set("sessionId", sessionId, {
+      httpOnly: true, // frontend JS cannot read the cookie with document.cookie
+      path: "/", // make cookie available across app
+      sameSite: "lax", // give some CSRF protection
+      secure: process.env.NODE_ENV === "production", // cookie on sent over HTTPS
     });
+
+    return response;
   } catch {
     return NextResponse.json({ error: "Login failed" }, { status: 400 });
   }
