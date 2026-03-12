@@ -1,3 +1,7 @@
+/*
+This file determines the current logged in user byt reading the session cookie and checking the db
+*/
+
 import { db } from "@/lib/db";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
@@ -25,13 +29,12 @@ export async function GET() {
 
   if (rows.length === 0) {
     return NextResponse.json({ error: "Invalid Sessions" }, { status: 401 });
-
-    const userId = rows[0].user_id;
-
-    return NextResponse.json({
-      user: {
-        id: userId,
-      },
-    });
   }
+  const userId = rows[0].user_id;
+
+  return NextResponse.json({
+    user: {
+      id: userId,
+    },
+  });
 }
