@@ -18,7 +18,6 @@ export async function POST() {
       );
     }
 
-    // 3YP2FSK
     const response = NextResponse.json({ message: "Logged out succesfully " });
 
     // clear the cookie in the browser

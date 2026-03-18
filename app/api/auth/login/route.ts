@@ -55,13 +55,14 @@ export async function POST(request: Request) {
       );
     }
 
+    const expires_at = new Date(Date.now() + 1000 * 60 * 60 * 24); // current time + 24 hours : 1000ms  * 60 sec * 60 min * 24 hour // creates session that lasts one day
     const sessionId = crypto.randomUUID(); // make a unique id for the session
 
     // insert into sessions table
     await db.execute(
-      `INSERT INTO sessions (id, user_id)
-      VALUES (?,?)`,
-      [sessionId, user.id],
+      `INSERT INTO sessions (id, user_id, expires_at)
+      VALUES (?,?,?)`,
+      [sessionId, user.id, expires_at],
     );
 
     // return NextResponse.json({
@@ -89,7 +90,8 @@ export async function POST(request: Request) {
     });
 
     return response;
-  } catch {
+  } catch (error) {
+    console.error("LOGIN ROUTE ERROR:", error);
     return NextResponse.json({ error: "Login failed" }, { status: 500 });
   }
 }
