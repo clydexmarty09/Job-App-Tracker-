@@ -87,6 +87,7 @@ export async function POST(request: Request) {
       path: "/", // make cookie available across app
       sameSite: "lax", // give some CSRF protection
       secure: process.env.NODE_ENV === "production", // cookie on sent over HTTPS
+      expires: expires_at,
     });
 
     return response;
