@@ -40,7 +40,7 @@ type SessionRow = RowDataPacket & {
 export async function DELETE(
   request: Request,
   context: {
-    params: { id: string };
+    params: Promise<{ id: string }>;
   },
 ) {
   try {
@@ -75,7 +75,7 @@ export async function DELETE(
 
 export async function PATCH(
   request: Request,
-  context: { params: { id: string } },
+  context: { params: Promise<{ id: string }> },
 ) {
   try {
     const userId = await getLoggedInUserId();
