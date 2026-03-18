@@ -24,7 +24,7 @@ export default function Home() {
           setCounter(counter-1)
         }> Decrease counter </button> */}
 
-        <div className="flex gap-24 mt-4 p-4 font-semibold"> 
+        <div className="flex gap-10 md:gap-24 mt-4 p-4 font-semibold"> 
           <Link className="bg-blue-300/60 border rounded-md border-gray-600 p-4 hover:scale-110 transition w-40 text-center" href="/register"> Register </Link>
           <Link className="bg-blue-300/60 border rounded-md border-gray-600 p-4 hover:scale-110 transition w-40 text-center" href="/login"> Log In </Link>
         </div>
