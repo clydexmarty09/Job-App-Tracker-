@@ -14,6 +14,7 @@ export default function Home() {
         <p className="text-gray-500 text-center max-w-sm"> 
           Track job applications, update their status, and stay organized. 
         </p>
+        <p> Testing testing </p>
 
         {/* <p> {counter} </p>
         <button className="text-black border border-green-500/70 rounded-md p-4" onClick={()=> 
