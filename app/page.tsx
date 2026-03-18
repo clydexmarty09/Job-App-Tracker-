@@ -8,7 +8,7 @@ export default function Home() {
   //const [counter, setCounter] = useState(0); 
   
   return (
-    <div className="sm:p-4 sm:m-4 flex min-h-screen items-center justify-center bg-white font-sans dark:bg-black">
+    <div className="overscroll-none sm:p-4 sm:m-4 flex min-h-screen items-center justify-center bg-white font-sans dark:bg-black">
       <main className="flex w-full max-w-3xl flex-col items-center justify-center p-10 bg-white dark:bg-black gap-6">
         <h1 className="items-center m-auto p-4 font-bold text-2xl"> Job App Tracker </h1>
         <p className="text-gray-500 text-sm md:text-base text-center max-w-sm"> 
