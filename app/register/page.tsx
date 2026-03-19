@@ -47,7 +47,9 @@ export default function Register() {
     }
 
     return(
-        <main className="min-h-dvh m-auto p-4 flex flex-col items-center"> 
+     <main className="min-h-dvh flex flex-col p-4">
+        <div className="flex-1 flex items-center justify-center md:items-start md:pt-20">
+         <div className="w-full max-w-md flex flex-col items-center">
             <h1 className="text-2xl font-medium p-3"> REGISTER </h1>
    
             <form className="p-4 flex flex-col md:flex-row gap-10 md:gap-20" onSubmit={handleSubmit}> 
@@ -71,9 +73,13 @@ export default function Register() {
             </form>
             
 
-            <p className="text-xs text-gray-700 mt-auto p-5"> Have an account? <span> <Link className="text-blue-500/80 hover:underline" href="/login"> Log In </Link> instead </span> </p>
-
+            
             {error && <p> {error} </p>}
+            </div>
+            </div>
+
+            <p className="text-center text-xs text-gray-700 mt-auto p-5"> Have an account? <span> <Link className="text-blue-500/80 hover:underline" href="/login"> Log In </Link> instead </span> </p>
+
         </main>
 
     ); 

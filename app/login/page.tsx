@@ -37,33 +37,39 @@ export default function Login() {
    
    
     return(
-        <main className="overflow-hidden min-h-dvh m-auto p-4 flex flex-col items-center"> 
-            <h1 className="font-medium text-2xl p-3"> LOGIN</h1>
+       <main className="min-h-dvh flex flex-col p-4">
+            <div className="flex-1 flex items-center justify-center md:items-start md:pt-20">
+            <div className="w-full max-w-md flex flex-col items-center">
+                <h1 className="text-center font-medium text-2xl p-3"> LOGIN</h1>
 
 
-        <form className="flex flex-col md:flex-row gap-20 p-4" onSubmit={handleSubmit}> 
-            <input
-            className="border border-gray-300 rounded-md p-2"
-             type="email"
-             value={email}
-             onChange={(e)=> setEmail(e.target.value)}
-             placeholder="Email"
-             /> 
+                <form className="flex flex-col md:flex-row gap-10 md:gap-20 p-4" onSubmit={handleSubmit}> 
+                    <input
+                    className="border border-gray-300 rounded-md p-2"
+                    type="email"
+                    value={email}
+                    onChange={(e)=> setEmail(e.target.value)}
+                    placeholder="Email"
+                    /> 
 
-             <input
-             className="border border-gray-300 rounded-md p-2"
-             type="password"
-             value={password}
-             onChange={(e)=> setPassword(e.target.value)}
-             placeholder="Password"
-             />
+                    <input
+                    className="border border-gray-300 rounded-md p-2"
+                    type="password"
+                    value={password}
+                    onChange={(e)=> setPassword(e.target.value)}
+                    placeholder="Password"
+                    />
 
-             <button className="text-sm md:text-base transition hover:scale-105 text-center border rounded w-full md:w-20 p-2 md:p-3 border-gray-500 bg-blue-300/60" type="submit"> Login </button>
-        </form>
+                    <button className="text-sm md:text-base transition hover:scale-105 text-center border rounded w-full md:w-20 p-2 md:p-3 border-gray-500 bg-blue-300/60" type="submit"> Login </button>
+                </form>
 
-         <p className="text-xs text-gray-700 mt-auto p-5"> Don't have an account? <span> <Link className="text-blue-500/80 hover:underline" href="/register"> Register </Link> instead </span> </p>
+               
 
-        {error && <p className="text-red-600 text-xs p-2"> {error} </p>}
+            {error && <p className="text-red-600 text-xs p-2"> {error} </p>}
+         </div> 
+         </div> 
+
+          <p className="text-center text-xs text-gray-700 mt-auto p-5"> Don't have an account? <span> <Link className="text-blue-500/80 hover:underline" href="/register"> Register </Link> instead </span> </p>
         </main>
 
     ); 
