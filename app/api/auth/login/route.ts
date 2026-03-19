@@ -90,10 +90,10 @@ export async function POST(request: Request) {
       expires: expires_at,
     });
 
-    console.log("DB_NAME:", process.env.DB_NAME);
+    //console.log("DB_NAME:", process.env.DB_NAME);
     return response;
   } catch (error) {
-    console.log("DB_NAME:", process.env.DB_NAME);
+    //console.log("DB_NAME:", process.env.DB_NAME);
     console.error("LOGIN ROUTE ERROR:", error);
     return NextResponse.json({ error: "Login failed" }, { status: 500 });
   }
