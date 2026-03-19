@@ -184,8 +184,17 @@ export default function Dashboard() {
         }
 
         checkAuth();
-    }, [router])    
+    }, [router])   
+    
+    function getStatusColor(status: string | null) {
 
+        if (status === "Offer") { return "text-green-700"; } 
+        if (status === "Rejected") { return "text-red-700";}
+        if (status === "Interviewed") { return "text-blue-700";}
+        if (status === "Applied") { return "text-amber-500";}
+
+        return "text-gray-700/70"
+    }
 
     return (
 
@@ -225,13 +234,18 @@ export default function Dashboard() {
             onChange={(e)=> setPay(e.target.value)}
             /> 
 
-            <input
-            className="border border-gray-400 rounded"
+            <select
+            className={`border border-gray-400 rounded ${getStatusColor(status)}`}
             value={status}
-            type="text"
-            placeholder="Status"
             onChange={(e)=> setStatus(e.target.value)}
-            />
+            >
+                <option value=""> No status </option>
+                <option value="Applied"> Applied </option> 
+                <option value="Interviewed"> Interviewed </option>
+                <option value="Offer"> Offer </option>
+                <option value="Rejected"> Rejected </option>
+                
+            </select> 
 
             <button className="hover:scale-105 transition border rounded-md border-gray-500 bg-blue-300/60 p-2 " type="submit" disabled={loading}> 
                 {loading ? "Saving..." : "Add Application"}
@@ -252,17 +266,7 @@ export default function Dashboard() {
                         <p> Pay: <span className="text-green-700"> {app.pay ?? "No pay listed"} </span> </p>
                         
                         <select
-                        className={
-                            app.status == "Offer" ? 
-                            "text-green-700"
-                            : app.status === "Rejected" ? 
-                             "text-red-700" 
-                            : app.status === "Interviewed" ?
-                            "text-blue-700" 
-                            : app.status === "Applied" ? 
-                            "text-amber-500"
-                            : "text-gray-700/70"
-                        }
+                        className={`${getStatusColor(status)}`} 
                         value={app.status ?? ""}
                         onChange={(e)=> handleStatusChange(app.id, e.target.value)}> 
 
