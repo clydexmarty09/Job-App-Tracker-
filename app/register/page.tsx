@@ -48,6 +48,7 @@ export default function Register() {
 
     return(
      <main className="min-h-dvh flex flex-col p-4">
+        {/*flex-1 expands to fill all the remaining vertical space */}
         <div className="flex-1 flex items-center justify-center md:items-start md:pt-20">
          <div className="w-full max-w-md flex flex-col items-center">
             <h1 className="text-2xl font-medium p-3"> REGISTER </h1>

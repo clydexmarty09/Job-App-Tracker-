@@ -199,59 +199,79 @@ export default function Dashboard() {
     return (
 
        
-        <main className="min-h-screen m-auto p-5 flex flex-col items-endcenter"> 
+        <main className="min-h-dvh w-full max-w-6xl p-4 m-auto flex flex-col"> 
 
         <div> 
                <button className="underline text-lg hover:text-blue-400" onClick={()=> logOut()}> Log Out  </button>
         </div>
          
-            <h1 className="pt-10 text-3xl font-semibold"> DASHBOARD</h1>
+            <h1 className="text-center pt-10 text-2xl md:text-3xl font-semibold"> DASHBOARD</h1>
 
             { error && <p> {error}</p>}
-            <form className="flex gap-6 py-4" onSubmit={handleApplication}> 
-            
-            <input
-            className="border border-gray-400 rounded"
-            value={company}
-            type="text"
-            placeholder="Insert company"
-            onChange={(e)=> setCompany(e.target.value)}
-            />
-
-            <input
-            className="border border-gray-400 rounded"
-            value={position}
-            type="text"
-            placeholder="Insert position"
-            onChange={(e)=> setPosition(e.target.value)}
-            />
-
-            <input
-            className="border border-gray-400 rounded"
-            value={pay}
-            type="number"
-            placeholder="Insert pay"
-            onChange={(e)=> setPay(e.target.value)}
-            /> 
-
-            <select
-            className={`border border-gray-400 rounded ${getStatusColor(status)}`}
-            value={status}
-            onChange={(e)=> setStatus(e.target.value)}
-            >
-                <option value=""> No status </option>
-                <option value="Applied"> Applied </option> 
-                <option value="Interviewed"> Interviewed </option>
-                <option value="Offer"> Offer </option>
-                <option value="Rejected"> Rejected </option>
+            <div className="md:w-full flex justify-center md:justify-start">
+                <form className="w-full mx-auto md:mx-0 max-w-sm rounded-lg p-5 flex flex-col gap-4
+                md:max-w-none md:bg-transparent md:shadow-none md:p-0 md:flex-row md:flex-wrap" onSubmit={handleApplication}> 
                 
-            </select> 
+                    <div className="w-full md:w-auto flex items-center gap-1">
+                        <input
+                        className="flex-1 border border-gray-400 rounded p-2"
+                        value={company}
+                        type="text"
+                        placeholder="Insert company"
+                        required
+                        onChange={(e)=> setCompany(e.target.value)}
+                        />
+                        <span className="text-red-500"> *</span>
+                    </div>
 
-            <button className="hover:scale-105 transition border rounded-md border-gray-500 bg-blue-300/60 p-2 " type="submit" disabled={loading}> 
-                {loading ? "Saving..." : "Add Application"}
-            </button>
+                    <div className="w-full md:w-auto flex items-center gap-1">
+                        <input
+                        className="flex-1 border border-gray-400 rounded p-2"
+                        value={position}
+                        type="text"
+                        placeholder="Insert position"
+                        required
+                        onChange={(e)=> setPosition(e.target.value)}
+                        />
+                        <span className="text-red-500"> *</span>
+                    </div>
 
-            </form>
+                    <div className="w-full md:w-auto flex gap-1 items-center">
+                        <input
+                        className="flex-1 border border-gray-400 rounded p-2"
+                        value={pay}
+                        type="number"
+                        placeholder="Insert pay"
+                        onChange={(e)=> setPay(e.target.value)}
+                        /> 
+
+                        <span className="invisible"> * </span>
+
+                    </div>
+
+                    <div className="w-full md:w-auto flex items-center gap-1">
+                        <select
+                        className={`flex-1 border border-gray-400 p-2 rounded ${getStatusColor(status)}`}
+                        value={status}
+                        onChange={(e)=> setStatus(e.target.value)}
+                        required
+                        >
+                            <option value=""> No status </option>
+                            <option value="Applied"> Applied </option> 
+                            <option value="Interviewed"> Interviewed </option>
+                            <option value="Offer"> Offer </option>
+                            <option value="Rejected"> Rejected </option>
+                            
+                        </select> 
+                        <span className="text-red-500"> * </span>
+                    </div>
+
+                    <button className="hover:scale-105 transition border w-full rounded-md border-gray-500 bg-blue-300/60 p-2 " type="submit" disabled={loading}> 
+                        {loading ? "Saving..." : "Add Application"}
+                    </button>
+
+                </form>
+            </div>
 
             {loading ? (
                 <p> Loading... </p> ) : 
@@ -266,7 +286,7 @@ export default function Dashboard() {
                         <p> Pay: <span className="text-green-700"> {app.pay ?? "No pay listed"} </span> </p>
                         
                         <select
-                        className={`${getStatusColor(status)}`} 
+                        className={`${getStatusColor(app.status)}`} 
                         value={app.status ?? ""}
                         onChange={(e)=> handleStatusChange(app.id, e.target.value)}> 
 
@@ -278,7 +298,7 @@ export default function Dashboard() {
                         
                         </select>
 
-                        <button className="hover:scale-105 transition border border-gray-500 p-2 rounded font-semibold" onClick={()=> handleDelete(app.id)}> DELETE</button>
+                        <button className="hover:bg-red-500/80 hover:scale-105 transition border border-gray-500 p-2 rounded font-semibold" onClick={()=> handleDelete(app.id)}> DELETE</button>
                         
                         </div>
                     ))}
