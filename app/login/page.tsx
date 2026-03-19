@@ -37,11 +37,11 @@ export default function Login() {
    
    
     return(
-        <main className="min-h-screen m-auto p-4 flex flex-col items-center"> 
+        <main className="overflow-hidden min-h-dvh m-auto p-4 flex flex-col items-center"> 
             <h1 className="font-medium text-2xl p-3"> LOGIN</h1>
 
 
-        <form className="flex gap-20 p-4" onSubmit={handleSubmit}> 
+        <form className="flex flex-col md:flex-row gap-20 p-4" onSubmit={handleSubmit}> 
             <input
             className="border border-gray-300 rounded-md p-2"
              type="email"
@@ -58,7 +58,7 @@ export default function Login() {
              placeholder="Password"
              />
 
-             <button className="transition hover:scale-105 text-center border rounded w-20 p-3 border-gray-500 bg-blue-300/60" type="submit"> Login </button>
+             <button className="text-sm md:text-base transition hover:scale-105 text-center border rounded w-full md:w-20 p-2 md:p-3 border-gray-500 bg-blue-300/60" type="submit"> Login </button>
         </form>
 
          <p className="text-xs text-gray-700 mt-auto p-5"> Don't have an account? <span> <Link className="text-blue-500/80 hover:underline" href="/register"> Register </Link> instead </span> </p>
