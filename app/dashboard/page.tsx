@@ -8,12 +8,12 @@ type Application = {
     position: string; 
     pay: number | null; 
     status: string | null; 
+    created_at : string; 
 }; 
 
 export default function Dashboard() {
 
     const router = useRouter(); // for checking proper proper user log in
-
     const [error, setError] = useState(""); 
     const [applications, setApplications] = useState<Application[]>([]) 
     const [loading, setLoading] = useState(false) ;
@@ -33,6 +33,7 @@ export default function Dashboard() {
 
         //     return
         // }
+        
 
         try {
             const response = await fetch(`/api/applications`); 
@@ -271,7 +272,7 @@ export default function Dashboard() {
                 <div 
                 className="pt-4 flex flex-col text-xs md:text-sm gap-4">   
                     {applications.map((app)=> (
-                        <div className="border p-3 md:p-0 rounded-lg border-gray-300 shadow-sm md:border-none grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-6 md:items-center" key={app.id}> 
+                        <div className="border p-3 md:p-0 rounded-lg border-gray-300 shadow-sm md:border-none grid grid-cols-1 md:grid-cols-6 gap-3 md:gap-6 md:items-center" key={app.id}> 
                         <p> 
                             <span className="font-semibold"> Company: </span>
                             <span className="text-gray-800/70 wrap-break-word"> {app.company} </span> 
@@ -283,7 +284,7 @@ export default function Dashboard() {
                         <p> 
                             <span className="text-semibold"> Pay:</span> 
                             <span className="text-green-700 wrap-break-word"> {app.pay ?? "No pay listed"} </span> 
-                            </p>
+                        </p>
                         
                         <select
                         className={`rounded border border-gray-400 p-2 w-full ${getStatusColor(app.status)}`} 
@@ -297,6 +298,11 @@ export default function Dashboard() {
                             <option value="Rejected"> Rejected </option>
                         
                         </select>
+
+                        <p> 
+                            <span className="font-semibold"> Added: </span>
+                            <span className="text-gray-800/70 wrap-break-word"> {new Date(app.created_at).toLocaleString()} </span>
+                        </p>
 
                         <button className="bg-red-500/80 hover:scale-105 transition border border-gray-500 p-2 rounded font-semibold" onClick={()=> handleDelete(app.id)}> DELETE</button>
                         
