@@ -202,7 +202,7 @@ export default function Dashboard() {
         <main className="overflow-hidden min-h-dvh w-full max-w-6xl p-4 m-auto flex flex-col"> 
 
         <div> 
-               <button className="underline text-lg hover:text-blue-400" onClick={()=> logOut()}> Log Out  </button>
+               <button className="underline text-baseline md:text-lg hover:text-blue-400" onClick={()=> logOut()}> Log Out  </button>
         </div>
          
             <h1 className="text-center py-6 md:py-10 text-2xl md:text-3xl font-semibold"> DASHBOARD</h1>
@@ -210,11 +210,10 @@ export default function Dashboard() {
             { error && <p> {error}</p>}
             <div className="md:w-full flex justify-center md:justify-start">
                 <form className="w-full mx-auto md:mx-0 max-w-sm rounded-lg p-5 flex flex-col gap-4
-                md:max-w-none md:bg-transparent md:shadow-none md:p-0 md:flex-row md:flex-wrap" onSubmit={handleApplication}> 
+                md:max-w-none md:p-0 md:flex-row" onSubmit={handleApplication}> 
                 
-                    <div className="w-full md:w-auto flex items-center gap-1">
                         <input
-                        className="flex-1 border border-gray-400 rounded p-2"
+                        className="border border-gray-400 rounded p-2"
                         value={company}
                         type="text"
                         placeholder="Insert company"
@@ -222,11 +221,9 @@ export default function Dashboard() {
                         onChange={(e)=> setCompany(e.target.value)}
                         />
                       
-                    </div>
-
-                    <div className="w-full md:w-auto flex items-center gap-1">
+                
                         <input
-                        className="flex-1 border border-gray-400 rounded p-2"
+                        className="border border-gray-400 rounded p-2"
                         value={position}
                         type="text"
                         placeholder="Insert position"
@@ -234,11 +231,9 @@ export default function Dashboard() {
                         onChange={(e)=> setPosition(e.target.value)}
                         />
                       
-                    </div>
-
-                    <div className="w-full md:w-auto flex gap-1 items-center">
+               
                         <input
-                        className="flex-1 border border-gray-400 rounded p-2"
+                        className="border border-gray-400 rounded p-2"
                         value={pay}
                         type="number"
                         placeholder="Insert pay"
@@ -246,12 +241,8 @@ export default function Dashboard() {
                         /> 
 
                       
-
-                    </div>
-
-                    <div className="w-full md:w-auto flex items-center gap-1">
                         <select
-                        className={`flex-1 border border-gray-400 p-2 rounded ${getStatusColor(status)}`}
+                        className={`border border-gray-400 p-2 rounded ${getStatusColor(status)}`}
                         value={status}
                         onChange={(e)=> setStatus(e.target.value)}
                         required
@@ -264,9 +255,9 @@ export default function Dashboard() {
                             
                         </select> 
                        
-                    </div>
+     
 
-                    <button className="hover:scale-105 transition border w-full md:w-45 rounded-md border-gray-500 bg-blue-300/60 p-1" type="submit" disabled={loading}> 
+                    <button className="hover:scale-105 transition border w-full rounded-md border-gray-500 bg-blue-300/60 p-1" type="submit" disabled={loading}> 
                         {loading ? "Saving..." : "Add Application"}
                     </button>
 
@@ -278,15 +269,25 @@ export default function Dashboard() {
             applications.length === 0 ? (
                 <p className="text-red-600/80"> No applications yet. </p>
             ): (
-                <div className="pt-4 flex flex-col text-xs gap-4">   
+                <div 
+                className="pt-4 flex flex-col text-xs md:text-sm gap-4">   
                     {applications.map((app)=> (
-                        <div className="grid grid-cols-5 gap-10 items-center" key={app.id}> 
-                        <p> Company: <span className="text-gray-800/70"> {app.company} </span> </p>
-                        <p> Position: <span className="text-gray-800/70"> {app.position} </span> </p>
-                        <p> Pay: <span className="text-green-700"> {app.pay ?? "No pay listed"} </span> </p>
+                        <div className="border p-3 md:p-0 rounded-lg border-gray-300 shadow-sm md:border-none grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-6 md:items-center" key={app.id}> 
+                        <p> 
+                            <span className="font-semibold"> Company: </span>
+                            <span className="text-gray-800/70 wrap-break-word"> {app.company} </span> 
+                        </p>
+                        <p> 
+                            <span className="text-semibold"> Position: </span>
+                            <span className="text-gray-800/70 wrap-break-word"> {app.position} </span> 
+                            </p>
+                        <p> 
+                            <span className="text-semibold"> Pay:</span> 
+                            <span className="text-green-700 wrap-break-word"> {app.pay ?? "No pay listed"} </span> 
+                            </p>
                         
                         <select
-                        className={`${getStatusColor(app.status)}`} 
+                        className={`rounded border border-gray-400 p-2 w-full ${getStatusColor(app.status)}`} 
                         value={app.status ?? ""}
                         onChange={(e)=> handleStatusChange(app.id, e.target.value)}> 
 
