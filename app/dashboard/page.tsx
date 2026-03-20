@@ -199,7 +199,7 @@ export default function Dashboard() {
     return (
 
        
-        <main className="overflow-hidden min-h-dvh w-full max-w-6xl p-4 m-auto flex flex-col"> 
+        <main className="min-h-dvh w-full max-w-6xl p-4 m-auto flex flex-col"> 
 
         <div> 
                <button className="underline text-baseline md:text-lg hover:text-blue-400" onClick={()=> logOut()}> Log Out  </button>
@@ -211,49 +211,49 @@ export default function Dashboard() {
             <div className="md:w-full flex justify-center md:justify-start">
                 <form className="w-full mx-auto md:mx-0 max-w-sm rounded-lg p-5 flex flex-col gap-4
                 md:max-w-none md:p-0 md:flex-row" onSubmit={handleApplication}> 
-                
-                        <input
-                        className="border border-gray-400 rounded p-2"
-                        value={company}
-                        type="text"
-                        placeholder="Insert company"
-                        required
-                        onChange={(e)=> setCompany(e.target.value)}
-                        />
-                      
-                
-                        <input
-                        className="border border-gray-400 rounded p-2"
-                        value={position}
-                        type="text"
-                        placeholder="Insert position"
-                        required
-                        onChange={(e)=> setPosition(e.target.value)}
-                        />
-                      
-               
-                        <input
-                        className="border border-gray-400 rounded p-2"
-                        value={pay}
-                        type="number"
-                        placeholder="Insert pay"
-                        onChange={(e)=> setPay(e.target.value)}
-                        /> 
+            
+                    <input
+                    className="border border-gray-400 rounded p-2"
+                    value={company}
+                    type="text"
+                    placeholder="Insert company"
+                    required
+                    onChange={(e)=> setCompany(e.target.value)}
+                    />
+                    
+            
+                    <input
+                    className="border border-gray-400 rounded p-2"
+                    value={position}
+                    type="text"
+                    placeholder="Insert position"
+                    required
+                    onChange={(e)=> setPosition(e.target.value)}
+                    />
+                    
+            
+                    <input
+                    className="border border-gray-400 rounded p-2"
+                    value={pay}
+                    type="number"
+                    placeholder="Insert pay"
+                    onChange={(e)=> setPay(e.target.value)}
+                    /> 
 
-                      
-                        <select
-                        className={`border border-gray-400 p-2 rounded ${getStatusColor(status)}`}
-                        value={status}
-                        onChange={(e)=> setStatus(e.target.value)}
-                        required
-                        >
-                            <option value=""> No status </option>
-                            <option value="Applied"> Applied </option> 
-                            <option value="Interviewed"> Interviewed </option>
-                            <option value="Offer"> Offer </option>
-                            <option value="Rejected"> Rejected </option>
-                            
-                        </select> 
+                    
+                    <select
+                    className={`border border-gray-400 p-2 rounded ${getStatusColor(status)}`}
+                    value={status}
+                    onChange={(e)=> setStatus(e.target.value)}
+                    required
+                    >
+                        <option value=""> No status </option>
+                        <option value="Applied"> Applied </option> 
+                        <option value="Interviewed"> Interviewed </option>
+                        <option value="Offer"> Offer </option>
+                        <option value="Rejected"> Rejected </option>
+                        
+                    </select> 
                        
      
 
