@@ -202,7 +202,7 @@ export default function Dashboard() {
         <main className="min-h-dvh w-full max-w-6xl p-4 m-auto flex flex-col"> 
 
         <div> 
-               <button className="fixed underline text-baseline md:text-lg hover:text-blue-400" onClick={()=> logOut()}> Log Out  </button>
+               <button className="underline text-baseline md:text-lg hover:text-blue-400" onClick={()=> logOut()}> Log Out  </button>
         </div>
          
             <h1 className="text-center py-6 md:py-10 text-2xl md:text-3xl font-semibold"> DASHBOARD</h1>
@@ -255,8 +255,7 @@ export default function Dashboard() {
                         
                     </select> 
                        
-     
-
+    
                     <button className="hover:scale-105 transition border w-full rounded-md border-gray-500 bg-blue-300/60 p-1" type="submit" disabled={loading}> 
                         {loading ? "Saving..." : "Add Application"}
                     </button>
@@ -299,7 +298,7 @@ export default function Dashboard() {
                         
                         </select>
 
-                        <button className="hover:bg-red-500/80 hover:scale-105 transition border border-gray-500 p-2 rounded font-semibold" onClick={()=> handleDelete(app.id)}> DELETE</button>
+                        <button className="bg-red-500/80 hover:scale-105 transition border border-gray-500 p-2 rounded font-semibold" onClick={()=> handleDelete(app.id)}> DELETE</button>
                         
                         </div>
                     ))}
