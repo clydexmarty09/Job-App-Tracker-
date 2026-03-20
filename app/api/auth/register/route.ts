@@ -4,12 +4,35 @@
 import bcrypt from "bcrypt";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
+import type { RowDataPacket } from "mysql2";
+
+type UserRow = RowDataPacket & {
+  email: string;
+};
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { email, password } = body; // destructuring: pulls email and pw out of body
     const uid = crypto.randomUUID();
+
+    // validation check if user exists?
+    const [rows] = await db.execute<UserRow[]>(
+      `SELECT email
+      FROM users
+      WHERE email = ?
+      LIMIT 1`,
+      [email],
+    );
+
+    if (rows.length > 0) {
+      return NextResponse.json(
+        {
+          error: "User already exists!",
+        },
+        { status: 409 }, // 409 is code for conflict ( resource alread exists )
+      );
+    }
 
     if (!email || !password) {
       return NextResponse.json(
