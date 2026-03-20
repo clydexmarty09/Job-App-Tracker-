@@ -202,7 +202,7 @@ export default function Dashboard() {
         <main className="min-h-dvh w-full max-w-6xl p-4 m-auto flex flex-col"> 
 
         <div> 
-               <button className="underline text-baseline md:text-lg hover:text-blue-400" onClick={()=> logOut()}> Log Out  </button>
+               <button className="fixed underline text-baseline md:text-lg hover:text-blue-400" onClick={()=> logOut()}> Log Out  </button>
         </div>
          
             <h1 className="text-center py-6 md:py-10 text-2xl md:text-3xl font-semibold"> DASHBOARD</h1>
