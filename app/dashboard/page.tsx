@@ -199,13 +199,13 @@ export default function Dashboard() {
     return (
 
        
-        <main className="min-h-dvh w-full max-w-6xl p-4 m-auto flex flex-col"> 
+        <main className="overflow-hidden min-h-dvh w-full max-w-6xl p-4 m-auto flex flex-col"> 
 
         <div> 
                <button className="underline text-lg hover:text-blue-400" onClick={()=> logOut()}> Log Out  </button>
         </div>
          
-            <h1 className="text-center pt-10 text-2xl md:text-3xl font-semibold"> DASHBOARD</h1>
+            <h1 className="text-center py-6 md:py-10 text-2xl md:text-3xl font-semibold"> DASHBOARD</h1>
 
             { error && <p> {error}</p>}
             <div className="md:w-full flex justify-center md:justify-start">
@@ -221,7 +221,7 @@ export default function Dashboard() {
                         required
                         onChange={(e)=> setCompany(e.target.value)}
                         />
-                        <span className="text-red-500"> *</span>
+                      
                     </div>
 
                     <div className="w-full md:w-auto flex items-center gap-1">
@@ -233,7 +233,7 @@ export default function Dashboard() {
                         required
                         onChange={(e)=> setPosition(e.target.value)}
                         />
-                        <span className="text-red-500"> *</span>
+                      
                     </div>
 
                     <div className="w-full md:w-auto flex gap-1 items-center">
@@ -245,7 +245,7 @@ export default function Dashboard() {
                         onChange={(e)=> setPay(e.target.value)}
                         /> 
 
-                        <span className="invisible"> * </span>
+                      
 
                     </div>
 
@@ -263,10 +263,10 @@ export default function Dashboard() {
                             <option value="Rejected"> Rejected </option>
                             
                         </select> 
-                        <span className="text-red-500"> * </span>
+                       
                     </div>
 
-                    <button className="hover:scale-105 transition border w-full rounded-md border-gray-500 bg-blue-300/60 p-2 " type="submit" disabled={loading}> 
+                    <button className="hover:scale-105 transition border w-full md:w-45 rounded-md border-gray-500 bg-blue-300/60 p-1" type="submit" disabled={loading}> 
                         {loading ? "Saving..." : "Add Application"}
                     </button>
 
