@@ -284,11 +284,11 @@ export default function Dashboard() {
                         <div className="border p-3 md:p-0 rounded-lg border-gray-300 shadow-sm md:border-none grid grid-cols-1 md:grid-cols-7 gap-3 md:gap-6 md:items-center" key={app.id}> 
                         <p> 
                             <span className="font-semibold"> Company: </span>
-                            <span className="text-gray-800/70 wrap-break-word"> {app.company} </span> 
+                            <span className="text-green-700 wrap-break-word"> {app.company} </span> 
                         </p>
                         <p> 
                             <span className="text-semibold"> Position: </span>
-                            <span className="text-gray-800/70 wrap-break-word"> {app.position} </span> 
+                            <span className="text-green-700 wrap-break-word"> {app.position} </span> 
                             </p>
                         <p> 
                             <span className="text-semibold"> Pay:</span> 
