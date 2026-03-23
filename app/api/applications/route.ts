@@ -77,13 +77,13 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { company, pay, status, position } = body;
+    const { company, pay, status, position, location } = body;
     const id = crypto.randomUUID();
 
     await db.execute(
-      `INSERT INTO applications(id, user_id, company, position, pay, status)
-      VALUES (?,?,?,?,?,?)`,
-      [id, userId, company, position, pay, status],
+      `INSERT INTO applications(id, user_id, company, position, pay, status, location)
+      VALUES (?,?,?,?,?,?,?)`,
+      [id, userId, company, position, pay, status, location],
     );
 
     return NextResponse.json({ ok: true });

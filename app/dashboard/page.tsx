@@ -8,7 +8,8 @@ type Application = {
     position: string; 
     pay: number | null; 
     status: string | null; 
-    created_at : string; 
+    created_at : string;
+    location: string;  
 }; 
 
 export default function Dashboard() {
@@ -21,6 +22,7 @@ export default function Dashboard() {
     const [pay, setPay] =  useState(""); 
     const [status, setStatus] = useState(""); 
     const [position, setPosition] = useState(""); 
+    const [location, setLocation] = useState(""); 
 
     async function fetchApplications() {
         setLoading(true); 
@@ -74,7 +76,7 @@ export default function Dashboard() {
                     "Content-Type": "application/json", 
                 }, 
                 body: JSON.stringify({
-                    company, position, status, pay: pay ? Number(pay) : null, 
+                    company, position, status, pay: pay ? Number(pay) : null, location,
                 }),
                 
             }); 
@@ -90,6 +92,7 @@ export default function Dashboard() {
             setPosition(""); 
             setStatus("")
             setPay("")
+            setLocation(""); 
 
             await fetchApplications(); 
         } catch {
@@ -241,7 +244,13 @@ export default function Dashboard() {
                     onChange={(e)=> setPay(e.target.value)}
                     /> 
 
-                    
+                    <input className="border border-gray-400 rounded p-2"
+                    value={location}
+                    type="text"
+                    placeholder="Insert Location"
+                    onChange={(e)=> setLocation(e.target.value)}
+                    />
+
                     <select
                     className={`border border-gray-400 p-2 rounded ${getStatusColor(status)}`}
                     value={status}
@@ -272,7 +281,7 @@ export default function Dashboard() {
                 <div 
                 className="pt-4 flex flex-col text-xs md:text-sm gap-4">   
                     {applications.map((app)=> (
-                        <div className="border p-3 md:p-0 rounded-lg border-gray-300 shadow-sm md:border-none grid grid-cols-1 md:grid-cols-6 gap-3 md:gap-6 md:items-center" key={app.id}> 
+                        <div className="border p-3 md:p-0 rounded-lg border-gray-300 shadow-sm md:border-none grid grid-cols-1 md:grid-cols-7 gap-3 md:gap-6 md:items-center" key={app.id}> 
                         <p> 
                             <span className="font-semibold"> Company: </span>
                             <span className="text-gray-800/70 wrap-break-word"> {app.company} </span> 
@@ -284,6 +293,12 @@ export default function Dashboard() {
                         <p> 
                             <span className="text-semibold"> Pay:</span> 
                             <span className="text-green-700 wrap-break-word"> {app.pay ?? "No pay listed"} </span> 
+                        </p>
+
+                        <p> 
+                            <span className="text-semibold"> Location: </span>
+                            <span className="text-green-700 wrap-break-word"> {app.location} </span>
+
                         </p>
                         
                         <select
