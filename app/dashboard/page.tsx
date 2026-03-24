@@ -158,6 +158,34 @@ export default function Dashboard() {
 
     }
 
+    async function handlePayChange( id: string, newPay: string) {
+        setError(""); 
+
+        try {
+            const res = await fetch(`/api/applications/${id}`,
+                {
+                    method: "PATCH", 
+                    headers: {
+                        "Content-Type" : "application/json",
+                    }, 
+                    body : JSON.stringify({
+                        pay: newPay,
+                    }),
+                }
+            ); 
+
+            const data = await res.json(); 
+            if(!res.ok) {
+                setError(data.error || "Update failed"); 
+                return; 
+            }
+
+            await fetchApplications(); 
+        } catch {
+            setError("Failed to update")
+        }
+    }
+
     async function logOut() { 
 
         try {
@@ -290,10 +318,18 @@ export default function Dashboard() {
                             <span className="text-semibold"> Position: </span>
                             <span className="text-green-700 wrap-break-word"> {app.position} </span> 
                             </p>
-                        <p> 
+                       
+                        {/*<p> 
                             <span className="text-semibold"> Pay:</span> 
                             <span className="text-green-700 wrap-break-word"> {app.pay ?? "No pay listed"} </span> 
-                        </p>
+                        </p>*/}
+
+                        <input
+                            className="border border-gray-400 rounded-md p-2"
+                            type="number"
+                            defaultValue={app.pay ?? ""}
+                            onBlur={(e)=> handlePayChange(app.id, e.target.value)}           
+                        />
 
                         <p> 
                             <span className="text-semibold"> Location: </span>

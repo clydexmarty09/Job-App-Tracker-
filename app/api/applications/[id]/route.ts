@@ -81,18 +81,43 @@ export async function PATCH(
     const userId = await getLoggedInUserId();
     const { id } = await context.params;
     const body = await request.json();
-    const { status } = body;
 
     if (!userId) {
       return NextResponse.json({ error: "Not Authenticated" }, { status: 401 });
     }
 
+    const updates: string[] = []; // array of strings - start as an empty array
+    const values: (string | number | null)[] = [];
+
+    // check whether status was sent
+    if ("status" in body) {
+      updates.push("status = ?");
+      values.push(body.status ?? null);
+    }
+
+    if ("pay" in body) {
+      updates.push("pay = ?");
+      values.push(body.pay ?? null);
+    }
+
+    if (updates.length === 0) {
+      return NextResponse.json({ error: "No field selected" }, { status: 400 });
+    }
+
+    values.push(id, userId);
+    // const { status, pay } = body;
+
+    // if (!userId) {
+    //   return NextResponse.json({ error: "Not Authenticated" }, { status: 401 });
+    // }
+
+    // takes the array and combine it into one
     const [result] = await db.execute<ResultSetHeader>(
       `UPDATE applications
-            SET status = ?
+            SET ${updates.join(", ")}  
             WHERE id = ?
             AND user_id = ?`,
-      [status, id, userId],
+      values,
     );
 
     if (result.affectedRows === 0) {
