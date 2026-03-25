@@ -169,7 +169,7 @@ export default function Dashboard() {
                         "Content-Type" : "application/json",
                     }, 
                     body : JSON.stringify({
-                        pay: newPay,
+                        pay: newPay === "" ? null: Number(newPay),
                     }),
                 }
             ); 
