@@ -11,9 +11,9 @@ export async function POST() {
 
     // if there is a session, delete that session
     if (sessionId) {
-      await db.execute(
+      await db.query(
         `DELETE from sessions
-        WHERE id = ?`, // helps protect agains SQL injection
+        WHERE id = $1`, // helps protect agains SQL injection
         [sessionId],
       );
     }

@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
-import type { RowDataPacket } from "mysql2";
+//import type { RowDataPacket } from "mysql2";
 
 /*
 We need this because TS complains that it does not know what rows is an array 
@@ -11,11 +11,11 @@ this is because db.execute can return different kinds of results depending on th
 Defines the shape of one user row 
 So this tells TS "for this specific query, rows is an arrayof user rows"
 */
-type UserRow = RowDataPacket & {
-  id: string;
-  email: string;
-  password_hash: string;
-};
+// type UserRow = RowDataPacket & {
+//   id: string;
+//   email: string;
+//   password_hash: string;
+// };
 
 export async function POST(request: Request) {
   try {
@@ -29,15 +29,15 @@ export async function POST(request: Request) {
       );
     }
 
-    const [rows] = await db.execute<UserRow[]>(
+    const userExists = await db.query(
       `SELECT id, email, password_hash
       FROM users
-      WHERE email = ?
+      WHERE email = $1
       LIMIT 1`,
       [email],
     );
 
-    const user = rows[0];
+    const user = userExists.rows[0];
 
     if (!user) {
       return NextResponse.json(
@@ -59,7 +59,7 @@ export async function POST(request: Request) {
     const sessionId = crypto.randomUUID(); // make a unique id for the session
 
     // insert into sessions table
-    await db.execute(
+    await db.query(
       `INSERT INTO sessions (id, user_id, expires_at)
       VALUES (?,?,?)`,
       [sessionId, user.id, expires_at],

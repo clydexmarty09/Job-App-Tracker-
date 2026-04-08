@@ -3,7 +3,7 @@ Dashboard request-> API route receives request->Extracy userId-> Validate->Query
 */
 import { cookies } from "next/headers";
 import { db } from "@/lib/db";
-import { getLoggedInUserId } from "@/lib/auth";
+//import { getLoggedInUserId } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import type { RowDataPacket } from "mysql2";
 
@@ -11,26 +11,26 @@ type SessionRow = RowDataPacket & {
   user_id: string;
 };
 
-// async function getLoggedInUserId() {
-//   const cookieStore = await cookies();
-//   const sessionId = cookieStore.get("sessionId")?.value;
+async function getLoggedInUserId() {
+  const cookieStore = await cookies();
+  const sessionId = cookieStore.get("sessionId")?.value;
 
-//   if (!sessionId) {
-//     return null;
-//   }
+  if (!sessionId) {
+    return null;
+  }
 
-//   const [sessionRows] = await db.execute<SessionRow[]>(
-//     `SELECT user_id
-//     FROM sessions
-//     WHERE id = ?`,
-//     [sessionId],
-//   );
+  const [sessionRows] = await db.execute<SessionRow[]>(
+    `SELECT user_id
+    FROM sessions
+    WHERE id = ?`,
+    [sessionId],
+  );
 
-//   if (sessionRows.length === 0) {
-//     return null;
-//   }
-//   return sessionRows[0].user_id;
-// }
+  if (sessionRows.length === 0) {
+    return null;
+  }
+  return sessionRows[0].user_id;
+}
 
 export async function GET(request: Request) {
   try {

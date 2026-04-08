@@ -5,12 +5,12 @@ This file determines the current logged in user byt reading the session cookie a
 import { db } from "@/lib/db";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import type { RowDataPacket } from "mysql2";
+//import type { RowDataPacket } from "mysql2";
 
 // the shape of the row returned from the sessions table query
-type SessionRow = RowDataPacket & {
-  user_id: string;
-};
+// type SessionRow = RowDataPacket & {
+//   user_id: string;
+// };
 
 export async function GET() {
   try {
@@ -23,18 +23,19 @@ export async function GET() {
     }
 
     // return an array of SessionRow objects
-    const [rows] = await db.execute<SessionRow[]>( // find sessions whose id matches the cookie
+    const sessionResult = await db.query(
+      // find sessions whose id matches the cookie
       // only return if the expiration is still in the future
-      `SELECT user_id FROM sessions WHERE id = ?
+      `SELECT user_id FROM sessions WHERE id = $1
       AND expires_at > NOW()  
       LIMIT 1`,
       [sessionId],
     );
 
-    if (rows.length === 0) {
+    if (sessionResult.rows.length === 0) {
       return NextResponse.json({ error: "Invalid Sessions" }, { status: 401 });
     }
-    const userId = rows[0].user_id;
+    const userId = sessionResult.rows[0].user_id;
 
     return NextResponse.json({
       user: {
