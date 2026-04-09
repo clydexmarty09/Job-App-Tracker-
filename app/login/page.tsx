@@ -37,15 +37,15 @@ export default function Login() {
    
    
     return(
-       <main className="min-h-dvh flex flex-col p-4">
+       <main className="landing-page">
             <div className="flex-1 flex items-center justify-center md:items-start md:pt-20">
             <div className="w-full max-w-md flex flex-col items-center">
                 <h1 className="text-center font-medium text-2xl p-3"> LOGIN</h1>
 
 
-                <form className="flex flex-col md:flex-row gap-10 md:gap-20 p-4" onSubmit={handleSubmit}> 
+                <form className="form-preset" onSubmit={handleSubmit}> 
                     <input
-                    className="border border-gray-300 rounded-md p-2"
+                    className="form-input"
                     type="email"
                     value={email}
                     onChange={(e)=> setEmail(e.target.value)}
@@ -53,14 +53,14 @@ export default function Login() {
                     /> 
 
                     <input
-                    className="border border-gray-300 rounded-md p-2"
+                    className="form-input"
                     type="password"
                     value={password}
                     onChange={(e)=> setPassword(e.target.value)}
                     placeholder="Password"
                     />
 
-                    <button className="text-sm md:text-base transition hover:scale-105 text-center border rounded w-full md:w-20 p-2 md:p-3 border-gray-500 bg-blue-300/60" type="submit"> Login </button>
+                    <button className="btn-submit" type="submit"> Login </button>
                 </form>
 
                

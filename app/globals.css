@@ -5,6 +5,25 @@
   --foreground: #171717;
 }
 
+@layer components {
+  .btn-submit {
+    @apply hover:scale-105 transition text-sm md:text-base w-full 
+    md:w-40 border rounded border-gray-500 bg-blue-300/60 p-2 md:p-3;
+  }
+
+  .form-preset {
+    @apply p-4 flex flex-col md:flex-row gap-10 md:gap-20; 
+  }
+
+  .landing-page {
+    @apply min-h-dvh flex flex-col p-4; 
+  }
+
+  .form-input {
+    @apply border rounded-md p-2 border-gray-300; 
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

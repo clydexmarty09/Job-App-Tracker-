@@ -47,28 +47,28 @@ export default function Register() {
     }
 
     return(
-     <main className="min-h-dvh flex flex-col p-4">
+     <main className="landing-page">
         {/*flex-1 expands to fill all the remaining vertical space */}
         <div className="flex-1 flex items-center justify-center md:items-start md:pt-20">
          <div className="w-full max-w-md flex flex-col items-center">
             <h1 className="text-2xl font-medium p-3"> REGISTER </h1>
    
-            <form className="p-4 flex flex-col md:flex-row gap-10 md:gap-20" onSubmit={handleSubmit}> 
+            <form className="form-preset" onSubmit={handleSubmit}> 
                 <input
-                className="border rounded-md p-2 border-gray-300"
+                className="form-input"
                 placeholder="Email"
                 value={email}
                 type="email"
                 onChange={(e)=> setEmail(e.target.value)}
                 />
                 <input
-                className="border rounded-md p-2 border-gray-300"
+                className="form-input"
                 placeholder="Password"
                 value={password}
                 type="password"
                 onChange={(e)=> setPassword(e.target.value)}
                 />
-                <button className="hover:scale-105 transition text-sm md:text-base w-full md:w-40 border rounded border-gray-500 bg-blue-300/60 p-2 md:p-3" type="submit" disabled={loading}> 
+                <button className="btn-submit" type="submit" disabled={loading}> 
                 {loading ? "Registering..." : "Register"}
                 </button>
             </form>
