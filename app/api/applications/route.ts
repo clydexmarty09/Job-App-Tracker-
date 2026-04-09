@@ -5,11 +5,10 @@ import { cookies } from "next/headers";
 import { db } from "@/lib/db";
 //import { getLoggedInUserId } from "@/lib/auth";
 import { NextResponse } from "next/server";
-import type { RowDataPacket } from "mysql2";
 
-type SessionRow = RowDataPacket & {
-  user_id: string;
-};
+// type SessionRow = RowDataPacket & {
+//   user_id: string;
+// };
 
 async function getLoggedInUserId() {
   const cookieStore = await cookies();
@@ -19,17 +18,17 @@ async function getLoggedInUserId() {
     return null;
   }
 
-  const [sessionRows] = await db.execute<SessionRow[]>(
+  const sessionRows = await db.query(
     `SELECT user_id
     FROM sessions
-    WHERE id = ?`,
+    WHERE id = $1`,
     [sessionId],
   );
 
-  if (sessionRows.length === 0) {
+  if (sessionRows.rows.length === 0) {
     return null;
   }
-  return sessionRows[0].user_id;
+  return sessionRows.rows[0].user_id;
 }
 
 export async function GET(request: Request) {
@@ -50,15 +49,15 @@ export async function GET(request: Request) {
     // add placegholder to prevent INJECTION attacks
     // DESC = newest first
     // ASC = oldeest first
-    const [rows] = await db.query(
+    const result = await db.query(
       `SELECT *  
             FROM applications
-            WHERE user_id = ?
+            WHERE user_id = $1
             ORDER BY created_at DESC`,
       [userId],
     );
     // return the applications
-    return NextResponse.json(rows);
+    return NextResponse.json(result.rows);
   } catch (error) {
     console.error("Fetch applications error", error);
     return NextResponse.json(
@@ -80,9 +79,9 @@ export async function POST(request: Request) {
     const { company, pay, status, position, location } = body;
     const id = crypto.randomUUID();
 
-    await db.execute(
+    await db.query(
       `INSERT INTO applications(id, user_id, company, position, pay, status, location)
-      VALUES (?,?,?,?,?,?,?)`,
+      VALUES ($1,$2,$3,$4,$5,$6, $7)`,
       [id, userId, company, position, pay, status, location],
     );
 

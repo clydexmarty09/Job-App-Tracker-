@@ -6,11 +6,11 @@ import { db } from "@/lib/db";
 import { getLoggedInUserId } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import type { ResultSetHeader, RowDataPacket } from "mysql2";
+// import type { ResultSetHeader, RowDataPacket } from "mysql2";
 
-type SessionRow = RowDataPacket & {
-  user_id: string;
-};
+// type SessionRow = RowDataPacket & {
+//   user_id: string;
+// };
 
 // reads session cookie, looks up session in db, return logged in user's id
 // async function getLoggedInUserId() {
@@ -53,14 +53,14 @@ export async function DELETE(
 
     // delete the row only if the application id mathes, and the row belongs to the logged-in user
     // DELTE query does not return rows like a SELECT, so we add ResulrSetHeader to TS understands result.affectRows
-    const [result] = await db.execute<ResultSetHeader>(
+    const deleteResult = await db.query(
       `DELETE FROM applications
-            WHERE id = ? AND user_id = ?`,
+            WHERE id = $1 AND user_id = $2`,
       [id, userId],
     );
 
     // checks if the delete actually affected anything
-    if (result.affectedRows === 0) {
+    if (deleteResult.rowCount === 0) {
       return NextResponse.json(
         { error: "Application not found" },
         { status: 404 },
@@ -91,20 +91,24 @@ export async function PATCH(
 
     // check whether status was sent
     if ("status" in body) {
-      updates.push("status = ?");
       values.push(body.status ?? null);
+      updates.push(`status = $${values.length}`);
     }
 
     if ("pay" in body) {
-      updates.push("pay = ?");
       values.push(body.pay ?? null);
+      updates.push(`pay = $${values.length}`);
     }
 
     if (updates.length === 0) {
       return NextResponse.json({ error: "No field selected" }, { status: 400 });
     }
 
-    values.push(id, userId);
+    values.push(id);
+    const idPlaceholder = `$${values.length}`;
+
+    values.push(userId);
+    const userIdPlaceholder = `$${values.length}`;
     // const { status, pay } = body;
 
     // if (!userId) {
@@ -112,15 +116,15 @@ export async function PATCH(
     // }
 
     // takes the array and combine it into one
-    const [result] = await db.execute<ResultSetHeader>(
+    const res = await db.query(
       `UPDATE applications
             SET ${updates.join(", ")}  
-            WHERE id = ?
-            AND user_id = ?`,
+            WHERE id = ${idPlaceholder}
+            AND user_id = ${userIdPlaceholder}`,
       values,
     );
 
-    if (result.affectedRows === 0) {
+    if (res.rowCount === 0) {
       return NextResponse.json(
         { error: "Application not found" },
         { status: 404 },
