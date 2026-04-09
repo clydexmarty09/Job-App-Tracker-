@@ -61,7 +61,7 @@ export async function POST(request: Request) {
     // insert into sessions table
     await db.query(
       `INSERT INTO sessions (id, user_id, expires_at)
-      VALUES (?,?,?)`,
+      VALUES ($1,$2,$3)`,
       [sessionId, user.id, expires_at],
     );
 
