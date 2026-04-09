@@ -24,6 +24,8 @@ export default function Dashboard() {
     const [position, setPosition] = useState(""); 
     const [location, setLocation] = useState(""); 
 
+    //console.log(applications.length); 
+
     async function fetchApplications() {
         setLoading(true); 
         setError(""); 
@@ -230,12 +232,20 @@ export default function Dashboard() {
 
     return (
 
-       
+        
         <main className="min-h-dvh w-full max-w-6xl p-4 m-auto flex flex-col"> 
 
+       
         <div> 
                <button className="underline text-baseline md:text-lg hover:text-blue-400" onClick={()=> logOut()}> Log Out  </button>
         </div>
+
+         <div>
+            <p className="text-right"> Total Applications: {applications.length} </p>
+            <p className="text-right"> Applied: {applications.filter((app) => app.status ==="Applied").length} </p>
+         </div>
+        
+
          
             <h1 className="text-center py-6 md:py-10 text-2xl md:text-3xl font-semibold"> DASHBOARD</h1>
 
