@@ -230,22 +230,41 @@ export default function Dashboard() {
         return "text-gray-700/70"
     }
 
-    return (
+    /*
+    declare actual variables for the status cards here 
+    */
+    const applicationsTotal = applications.length; 
+    
+    const appliedTotal = 
+        applications.filter((app)=> 
+            app.status === "Applied").length; 
 
+    const offerTotal = 
+        applications.filter((app)=> 
+            app.status === "Offer").length; 
+
+    const interviewTotal = 
+        applications.filter((app)=> 
+            app.status === "Interviewed").length; 
+
+    const rejectedTotal = 
+        applications.filter((app)=> 
+            app.status === "Rejected").length
+
+    return (
         
         <main className="min-h-dvh w-full max-w-6xl p-4 m-auto flex flex-col"> 
 
-       
         <div> 
                <button className="underline text-baseline md:text-lg hover:text-blue-400" onClick={()=> logOut()}> Log Out  </button>
         </div>
 
-         <div>
-            <p className="text-right"> Total Applications: {applications.length} </p>
-            <p className="text-right"> Applied: {applications.filter((app) => app.status ==="Applied").length} </p>
-            <p className="text-right"> Interviewed: {applications.filter((app) => app.status==="Interviewed").length}</p>
-            <p className="text-right"> Accepted: {applications.filter((app) => app.status==="Offer").length}</p>
-            <p className="text-right"> Denied: {applications.filter((app) => app.status==="Rejected").length}</p>
+         <div className="text-sm">
+            <p className="text-right"> Total Applications: <span className="font-bold"> {applicationsTotal} </span>  </p>
+            <p className="text-right"> Applied: <span className="text-amber-500 font-bold"> {appliedTotal} </span> </p>
+            <p className="text-right"> Interviewed: <span className="text-blue-700 font-bold">  {interviewTotal}</span> </p>
+            <p className="text-right"> Accepted: <span className="text-green-700 font-bold"> {offerTotal} </span> </p>
+            <p className="text-right"> Denied: <span className="text-red-700 font-bold"> {rejectedTotal} </span> </p>
          </div>
          
             <h1 className="text-center py-6 md:py-10 text-2xl md:text-3xl font-semibold"> DASHBOARD</h1>
