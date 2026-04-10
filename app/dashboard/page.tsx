@@ -243,9 +243,10 @@ export default function Dashboard() {
          <div>
             <p className="text-right"> Total Applications: {applications.length} </p>
             <p className="text-right"> Applied: {applications.filter((app) => app.status ==="Applied").length} </p>
+            <p className="text-right"> Interviewed: {applications.filter((app) => app.status==="Interviewed").length}</p>
+            <p className="text-right"> Accepted: {applications.filter((app) => app.status==="Offer").length}</p>
+            <p className="text-right"> Denied: {applications.filter((app) => app.status==="Rejected").length}</p>
          </div>
-        
-
          
             <h1 className="text-center py-6 md:py-10 text-2xl md:text-3xl font-semibold"> DASHBOARD</h1>
 
