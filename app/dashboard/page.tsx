@@ -26,12 +26,12 @@ export default function Dashboard() {
     
     // states for pagination 
     const [page, setPage] = useState(1); 
-    const [totalPage, setTotalPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     const [totalCount, setTotalCount] = useState(0);  
 
     //console.log(applications.length); 
 
-    async function fetchApplications() {
+    async function fetchApplications(currentPage : number) {
         setLoading(true); 
         setError(""); 
         // const id = localStorage.getItem("userId") 
@@ -45,7 +45,7 @@ export default function Dashboard() {
         
 
         try {
-            const response = await fetch(`/api/applications`); 
+            const response = await fetch(`/api/applications?page=${currentPage}`); 
             const data = await response.json()
 
             if(!response.ok) {
@@ -54,7 +54,10 @@ export default function Dashboard() {
                 return; 
             } 
 
-            setApplications(data); 
+            setApplications(data.applications);
+            setTotalPages (data.totalPages); 
+            setTotalCount(data.totalCount); 
+
         } catch {
             setError("Failed to load applications")
 
@@ -101,7 +104,7 @@ export default function Dashboard() {
             setPay("")
             setLocation(""); 
 
-            await fetchApplications(); 
+            await fetchApplications(page); 
         } catch {
             setError("Failed to create applications")
         } finally {
@@ -125,7 +128,7 @@ export default function Dashboard() {
         if (!res.ok) {
             throw new Error("Cannot delete data"); 
         }
-            await fetchApplications(); 
+            await fetchApplications(page); 
         }
         // if successful, fetchApplications 
       
@@ -158,7 +161,7 @@ export default function Dashboard() {
                 return; 
             }
 
-          await fetchApplications(); 
+          await fetchApplications(page); 
         } catch {
             setError("Update failed"); 
         }
@@ -187,7 +190,7 @@ export default function Dashboard() {
                 return; 
             }
 
-            await fetchApplications(); 
+            await fetchApplications(page); 
         } catch {
             setError("Failed to update")
         }
@@ -216,14 +219,14 @@ export default function Dashboard() {
                     return; 
                 }
 
-                await fetchApplications(); 
+                await fetchApplications(page); 
             } catch {
                 router.push("/login"); 
             }
         }
 
         checkAuth();
-    }, [router])   
+    }, [router, page])   
     
     function getStatusColor(status: string | null) {
 
@@ -238,7 +241,7 @@ export default function Dashboard() {
     /*
     declare actual variables for the status cards here 
     */
-    const applicationsTotal = applications.length; 
+    const applicationsTotal = totalCount; 
     
     const appliedTotal = 
         applications.filter((app)=> 
@@ -392,10 +395,21 @@ export default function Dashboard() {
 
                         <button className="bg-red-500/80 hover:scale-105 transition border border-gray-500 p-2 rounded font-semibold" onClick={()=> handleDelete(app.id)}> DELETE</button>
                         
+                        
+        
                         </div>
+
+                        
                     ))}
 
+                    <div className="flex items-center text-center justify-between gap-4 p-6"> 
+                            <button type="button" onClick={()=> setPage((prev)=> prev - 1)} disabled={page === 1 || loading }> PREVIOUS </button>
+                            <button type="button" onClick={()=> setPage((prev)=> prev + 1)} disabled={page === totalPages || loading }> NEXT </button>
+                    </div> 
+
                 </div>
+
+
         )}
         </main>
 
