@@ -1,43 +1,53 @@
 /*
 Dashboard request-> API route receives request->Extracy userId-> Validate->Query database-> Return applications-> and dashboard renders
 */
-import { cookies } from "next/headers";
 import { db } from "@/lib/db";
-//import { getLoggedInUserId } from "@/lib/auth";
+import { getLoggedInUserId } from "@/lib/auth";
 import { NextResponse } from "next/server";
 
 // type SessionRow = RowDataPacket & {
 //   user_id: string;
 // };
 
-async function getLoggedInUserId() {
-  const cookieStore = await cookies();
-  const sessionId = cookieStore.get("sessionId")?.value;
+// async function getLoggedInUserId() {
+//   const cookieStore = await cookies();
+//   const sessionId = cookieStore.get("sessionId")?.value;
 
-  if (!sessionId) {
-    return null;
-  }
+//   if (!sessionId) {
+//     return null;
+//   }
 
-  const sessionRows = await db.query(
-    `SELECT user_id
-    FROM sessions
-    WHERE id = $1`,
-    [sessionId],
-  );
+//   const sessionRows = await db.query(
+//     `SELECT user_id
+//     FROM sessions
+//     WHERE id = $1`,
+//     [sessionId],
+//   );
 
-  if (sessionRows.rows.length === 0) {
-    return null;
-  }
-  return sessionRows.rows[0].user_id;
-}
+//   if (sessionRows.rows.length === 0) {
+//     return null;
+//   }
+//   return sessionRows.rows[0].user_id;
+// }
 
 export async function GET(request: Request) {
   try {
     // get url from the request
-    //const { searchParams } = new URL(request.url); // gert URL, conver into string object, and the destructure
+    const { searchParams } = new URL(request.url); // gert URL, conver into string object, and the destructure
+
+    // get page from ?page
+    const pageParam = searchParams.get("page");
+
+    //convert to Number - default to 1
+    const page = Number(pageParam) || 1;
+
+    // rows per page
+    const limit = 10;
+
+    // rows to skip
+    const offset = (page - 1) * limit;
 
     // read userID from query params
-    //const userId = searchParams.get("userId"); // get userId from URl. Returns sring || null
     // check if userID exists
 
     const userId = await getLoggedInUserId();
@@ -50,14 +60,35 @@ export async function GET(request: Request) {
     // DESC = newest first
     // ASC = oldeest first
     const result = await db.query(
-      `SELECT *  
+      `SELECT id, company, position, pay, status, created_at, location
             FROM applications
             WHERE user_id = $1
-            ORDER BY created_at DESC`,
-      [userId],
+            ORDER BY created_at DESC
+            LIMIT $2 OFFSET $3`,
+      [userId, limit, offset],
     );
     // return the applications
-    return NextResponse.json(result.rows);
+    //return NextResponse.json(result.rows);
+
+    // get total number of applications for this user
+    const countRes = await db.query(
+      `SELECT COUNT(*) AS total
+      FROM applications
+      WHERE user_id = $1`,
+      [userId],
+    );
+
+    const totalCount = Number(countRes.rows[0].total);
+    const totalPages = Math.ceil(totalCount / limit);
+
+    // return page data and pagination info
+    return NextResponse.json({
+      applications: result.rows,
+      page,
+      limit,
+      totalCount,
+      totalPages,
+    });
   } catch (error) {
     console.error("Fetch applications error", error);
     return NextResponse.json(
