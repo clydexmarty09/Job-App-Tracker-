@@ -7,12 +7,21 @@
 
 @layer components {
   .btn-submit {
-    @apply hover:scale-105 transition text-sm md:text-base w-full 
+    @apply hover:scale-105 transition text-sm md:text-base w-full active:scale-95
     md:w-40 border rounded border-gray-500 bg-blue-300/60 p-2 md:p-3;
   }
 
   .form-preset {
     @apply p-4 flex flex-col md:flex-row gap-10 md:gap-20; 
+  }
+
+  .delete-btn {
+    @apply bg-red-500/80 active:scale-95 hover:scale-105 transition border border-gray-500 p-2 rounded font-semibold
+  }
+
+  .prev-next {
+    @apply flex-1 border rounded-lg p-2 border-gray-500 bg-green-500/60 w-full disabled:opacity-40 disabled:hover:scale-100
+    transition hover:scale-105 active:scale-95; 
   }
 
   .landing-page {

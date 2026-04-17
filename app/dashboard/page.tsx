@@ -393,7 +393,7 @@ export default function Dashboard() {
                             <span className="text-gray-800/70 wrap-break-word"> {new Date(app.created_at).toLocaleString()} </span>
                         </p>
 
-                        <button className="bg-red-500/80 hover:scale-105 transition border border-gray-500 p-2 rounded font-semibold" onClick={()=> handleDelete(app.id)}> DELETE</button>
+                        <button className="delete-btn" onClick={()=> handleDelete(app.id)}> DELETE</button>
                         
                         
         
@@ -402,9 +402,9 @@ export default function Dashboard() {
                         
                     ))}
 
-                    <div className="flex items-center text-center justify-between gap-4 p-6"> 
-                            <button type="button" onClick={()=> setPage((prev)=> prev - 1)} disabled={page === 1 || loading }> PREVIOUS </button>
-                            <button type="button" onClick={()=> setPage((prev)=> prev + 1)} disabled={page === totalPages || loading }> NEXT </button>
+                    <div className="flex items-center text-center gap-4 py-4"> 
+                            <button className="prev-next" type="button" onClick={()=> setPage((prev)=> prev - 1)} disabled={page === 1 || loading }> PREVIOUS </button>
+                            <button className="prev-next" type="button" onClick={()=> setPage((prev)=> prev + 1)} disabled={page === totalPages || loading }> NEXT </button>
                     </div> 
 
                 </div>
