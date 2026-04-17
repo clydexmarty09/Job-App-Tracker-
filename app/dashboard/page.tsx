@@ -22,7 +22,12 @@ export default function Dashboard() {
     const [pay, setPay] =  useState(""); 
     const [status, setStatus] = useState(""); 
     const [position, setPosition] = useState(""); 
-    const [location, setLocation] = useState(""); 
+    const [location, setLocation] = useState("");
+    
+    // states for pagination 
+    const [page, setPage] = useState(1); 
+    const [totalPage, setTotalPage] = useState(1);
+    const [totalCount, setTotalCount] = useState(0);  
 
     //console.log(applications.length); 
 
