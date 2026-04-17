@@ -128,11 +128,15 @@ export default function Dashboard() {
         if (!res.ok) {
             throw new Error("Cannot delete data"); 
         }
-            await fetchApplications(page); 
-        }
+            
+        //await fetchApplications(page); 
+        setApplications((prev)=> prev.filter((app)=> app.id !== id)); 
+        setTotalCount((prev)=> prev - 1)
+        
+     }
         // if successful, fetchApplications 
-      
 
+        
         catch {
             setError("Cannot delete data"); 
         }
