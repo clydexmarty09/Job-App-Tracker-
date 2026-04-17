@@ -29,6 +29,7 @@ export default function Dashboard() {
     const [totalPages, setTotalPages] = useState(1);
     const [totalCount, setTotalCount] = useState(0);  
 
+    const [hasFetched, setHasFetched] = useState(false); 
     //console.log(applications.length); 
 
     async function fetchApplications(currentPage : number) {
@@ -63,6 +64,7 @@ export default function Dashboard() {
 
         } finally {
             setLoading(false); 
+            setHasFetched(true); 
         }
     }
 
@@ -343,7 +345,7 @@ export default function Dashboard() {
                 </form>
             </div>
 
-            {loading ? (
+            {loading || !hasFetched ? (
                 <p> Loading... </p> ) : 
             applications.length === 0 ? (
                 <p className="text-red-600/80"> No applications yet. </p>
