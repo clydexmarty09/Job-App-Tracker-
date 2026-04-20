@@ -25,15 +25,28 @@ export default function Dashboard() {
     const [location, setLocation] = useState("");
     
     // states for pagination -> switched to scrolling 
-    const [page, setPage] = useState(1); 
-    const [totalPages, setTotalPages] = useState(1);
+    // const [page, setPage] = useState(1); 
+    // const [totalPages, setTotalPages] = useState(1);
     const [totalCount, setTotalCount] = useState(0);  
     const [hasMore, setHasMore] = useState(true); 
+    const [offset, setOffset] = useState(0); 
+    const limit = 10; 
 
     const [hasFetched, setHasFetched] = useState(false); 
     //console.log(applications.length); 
 
-    async function fetchApplications(currentPage : number) {
+    // page refresh helper 
+    async function refresh() {
+        setApplications([]);
+        setOffset(0); 
+        setHasMore(true); 
+        await fetchApplications(0); 
+    }
+
+    async function fetchApplications(currentOffset : number) {
+
+        if(loading || !hasMore) return; 
+
         setLoading(true); 
         setError(""); 
         // const id = localStorage.getItem("userId") 
@@ -47,7 +60,7 @@ export default function Dashboard() {
         
 
         try {
-            const response = await fetch(`/api/applications?page=${currentPage}`); 
+            const response = await fetch(`/api/applications?limit=${limit}&offset=${currentOffset}`); 
             const data = await response.json()
 
             if(!response.ok) {
@@ -56,9 +69,15 @@ export default function Dashboard() {
                 return; 
             } 
 
-            setApplications(data.applications);
-            setTotalPages (data.totalPages); 
-            setTotalCount(data.totalCount); 
+            //setApplications(data.applications);
+            // setTotalPages (data.totalPages); 
+            // setTotalCount(data.totalCount); 
+            setApplications((prev)=> [...prev, ...data.applications]); 
+            setOffset(currentOffset + limit); 
+
+            if(!data.hasMore) {
+                setHasMore(false); 
+            }
 
         } catch {
             setError("Failed to load applications")
@@ -107,7 +126,7 @@ export default function Dashboard() {
             setPay("")
             setLocation(""); 
 
-            await fetchApplications(page); 
+            await refresh(); 
         } catch {
             setError("Failed to create applications")
         } finally {
@@ -134,7 +153,7 @@ export default function Dashboard() {
             
         //await fetchApplications(page); 
         setApplications((prev)=> prev.filter((app)=> app.id !== id)); 
-        setTotalCount((prev)=> prev - 1)
+       // setTotalCount((prev)=> prev - 1)
         
      }
         // if successful, fetchApplications 
@@ -168,7 +187,7 @@ export default function Dashboard() {
                 return; 
             }
 
-          await fetchApplications(page); 
+          await refresh(); 
         } catch {
             setError("Update failed"); 
         }
@@ -197,7 +216,7 @@ export default function Dashboard() {
                 return; 
             }
 
-            await fetchApplications(page); 
+            await refresh(); 
         } catch {
             setError("Failed to update")
         }
@@ -226,14 +245,14 @@ export default function Dashboard() {
                     return; 
                 }
 
-                await fetchApplications(page); 
+                await fetchApplications(0); 
             } catch {
                 router.push("/login"); 
             }
         }
 
         checkAuth();
-    }, [router, page])   
+    }, [router])   
     
     function getStatusColor(status: string | null) {
 
@@ -248,7 +267,7 @@ export default function Dashboard() {
     /*
     declare actual variables for the status cards here 
     */
-    const applicationsTotal = totalCount; 
+    const applicationsTotal = applications.length; 
     
     const appliedTotal = 
         applications.filter((app)=> 
@@ -409,10 +428,10 @@ export default function Dashboard() {
                         
                     ))}
 
-                    <div className="flex items-center text-center gap-4 py-4"> 
+                    {/* <div className="flex items-center text-center gap-4 py-4"> 
                             <button className="prev-next" type="button" onClick={()=> setPage((prev)=> prev - 1)} disabled={page === 1 || loading }> PREVIOUS </button>
                             <button className="prev-next" type="button" onClick={()=> setPage((prev)=> prev + 1)} disabled={page === totalPages || loading }> NEXT </button>
-                    </div> 
+                    </div>  */}
 
                 </div>
 
