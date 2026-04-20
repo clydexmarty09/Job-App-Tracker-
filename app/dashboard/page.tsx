@@ -24,10 +24,11 @@ export default function Dashboard() {
     const [position, setPosition] = useState(""); 
     const [location, setLocation] = useState("");
     
-    // states for pagination 
+    // states for pagination -> switched to scrolling 
     const [page, setPage] = useState(1); 
     const [totalPages, setTotalPages] = useState(1);
     const [totalCount, setTotalCount] = useState(0);  
+    const [hasMore, setHasMore] = useState(true); 
 
     const [hasFetched, setHasFetched] = useState(false); 
     //console.log(applications.length); 

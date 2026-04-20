@@ -35,17 +35,21 @@ export async function GET(request: Request) {
     // get url from the request
     const { searchParams } = new URL(request.url); // gert URL, conver into string object, and the destructure
 
+    const limitParam = searchParams.get("limit");
+    const offsetParam = searchParams.get("offset");
+
     // get page from ?page
     const pageParam = searchParams.get("page");
 
     //convert to Number - default to 1
-    const page = Number(pageParam) || 1;
+    //const page = Number(pageParam) || 1;
 
     // rows per page
-    const limit = 10;
+    const limit = Number(limitParam) || 10;
+    const offset = Number(offsetParam) || 0;
 
     // rows to skip
-    const offset = (page - 1) * limit;
+    // const offset = (page - 1) * limit;
 
     // read userID from query params
     // check if userID exists
@@ -84,10 +88,10 @@ export async function GET(request: Request) {
     // return page data and pagination info
     return NextResponse.json({
       applications: result.rows,
-      page,
       limit,
+      offset,
       totalCount,
-      totalPages,
+      hasMore: offset + result.rows.length < totalCount,
     });
   } catch (error) {
     console.error("Fetch applications error", error);
