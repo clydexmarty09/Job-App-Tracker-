@@ -1,5 +1,5 @@
 "use client"; 
-import { useState, useEffect } from "react"; 
+import { useState, useEffect, useRef } from "react"; 
 import { useRouter } from "next/navigation";
 
 type Application = {
@@ -34,6 +34,8 @@ export default function Dashboard() {
 
     const [hasFetched, setHasFetched] = useState(false); 
     //console.log(applications.length); 
+
+    const loadMoreRef = useRef<HTMLDivElement | null>(null); 
 
     // page refresh helper 
     async function refresh() {
@@ -253,7 +255,34 @@ export default function Dashboard() {
 
         checkAuth();
     }, [router])   
-    
+   
+    useEffect(()=> {
+
+        const observer = new IntersectionObserver(  // watch bottom marker and tell when it comes into view 
+            (entries) => { // function runs whenever the watched elements visibility changes 
+                const first = entries[0];  // bottom marker div 
+
+                if(first.isIntersecting && hasMore && !loading) { // check if the watched element is visible on the viewport 
+                    fetchApplications(offset);  // load next chunk starting from the current offset 
+                }
+            }, 
+            { threshold : 1 }  // only trigger when the element is fully visible 
+        ); 
+
+        const current = loadMoreRef.current; // grabs the actual DOM the ref is pointing to 
+
+        if(current) {
+            observer.observe(current);  // if bottom marker exists, start watching it 
+        }
+
+        // cleanup function: stop watching the old element 
+        return () => {
+            if (current) {
+                observer.unobserve(current)
+            }
+        }; 
+    }, [offset, hasMore, loading])
+
     function getStatusColor(status: string | null) {
 
         if (status === "Offer") { return "text-green-700"; } 
@@ -432,6 +461,7 @@ export default function Dashboard() {
                             <button className="prev-next" type="button" onClick={()=> setPage((prev)=> prev - 1)} disabled={page === 1 || loading }> PREVIOUS </button>
                             <button className="prev-next" type="button" onClick={()=> setPage((prev)=> prev + 1)} disabled={page === totalPages || loading }> NEXT </button>
                     </div>  */}
+                    <div ref={loadMoreRef} className="h-10"> </div>
 
                 </div>
 
