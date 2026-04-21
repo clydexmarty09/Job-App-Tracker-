@@ -39,6 +39,7 @@ export default function Dashboard() {
     //console.log(applications.length); 
 
     const loadMoreRef = useRef<HTMLDivElement | null>(null); 
+    //const fetchingRef = useRef(false); 
 
     // page refresh helper 
     async function refresh() {
@@ -48,9 +49,10 @@ export default function Dashboard() {
         await fetchApplications(0, true); 
     }
 
-    async function fetchApplications(currentOffset : number, isInitial = true) {
+    async function fetchApplications(currentOffset : number, isInitial = false) {
 
         if((initialLoad || loadMore) || !hasMore) return; 
+       
 
         if(isInitial) {
             setInitialLoad(true); 
@@ -83,7 +85,7 @@ export default function Dashboard() {
             //setApplications(data.applications);
             // setTotalPages (data.totalPages); 
             // setTotalCount(data.totalCount); 
-            setApplications((prev)=> [...prev, ...data.applications]); 
+            setApplications((prev)=> [...prev, ...data.applications]);
             setOffset(currentOffset + limit);
             
             console.log(currentOffset);  
@@ -101,7 +103,10 @@ export default function Dashboard() {
             if(isInitial) {
                 setInitialLoad(false); 
             } else {
-                setLoadMore(false); 
+                setTimeout(()=> {
+                    setLoadMore(false); 
+                }, 300)
+               
             }
             setHasFetched(true); 
         }
@@ -110,6 +115,7 @@ export default function Dashboard() {
     async function handleApplication(e: any) {
         e.preventDefault(); 
         setError("");
+        setSaving(true)
         // setLoading(true);  
 
         // const userId = localStorage.getItem("userId"); 
@@ -143,13 +149,17 @@ export default function Dashboard() {
             setPosition(""); 
             setStatus("")
             setPay("")
-            setLocation(""); 
+            setLocation("");
+            
 
             await refresh(); 
         } catch {
             setError("Failed to create applications")
         } finally {
             //setLoading(false);
+            setTimeout(()=> {
+                setSaving(false);  
+            }, 400); 
         }
     }
 
@@ -278,12 +288,12 @@ export default function Dashboard() {
         const observer = new IntersectionObserver(  // watch bottom marker and tell when it comes into view 
             (entries) => { // function runs whenever the watched elements visibility changes 
                 const first = entries[0];  // bottom marker div 
-
+          
                 if(first.isIntersecting && hasMore && !loadMore) { // check if the watched element is visible on the viewport 
-                    fetchApplications(offset, false);  // load next chunk starting from the current offset 
+                  fetchApplications(offset, false) // load next chunk starting from the current offset 
                 }
             }, 
-            { threshold : 0.1 }  // only trigger when the element is fully visible 
+            { rootMargin: "300px 0px", threshold : 0.1 }  // only trigger when the element is fully visible 
         ); 
 
         const current = loadMoreRef.current; // grabs the actual DOM the ref is pointing to 
