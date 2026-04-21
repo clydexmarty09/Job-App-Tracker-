@@ -10,6 +10,30 @@ import type { RowDataPacket } from "mysql2";
 //   email: string;
 // };
 
+function isValidEmail(email: string) {
+  const trimmed = email.trim().toLowerCase();
+
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed);
+}
+
+function isValidPassword(pw: string) {
+  if (pw.length < 8) {
+    return "Password must be at least 8 characters long";
+  }
+
+  if (!/[a-z]/.test(pw)) {
+    return "Password must contain at least one lowercase letter";
+  }
+
+  if (!/[A-Z]/.test(pw)) {
+    return "Password must contain at least one uppercase letter";
+  }
+
+  if (!/[0-9]/.test(pw)) {
+    return "Password must contain at least one number";
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
