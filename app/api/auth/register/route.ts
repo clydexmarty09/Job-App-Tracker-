@@ -32,6 +32,8 @@ function isValidPassword(pw: string) {
   if (!/[0-9]/.test(pw)) {
     return "Password must contain at least one number";
   }
+
+  return null;
 }
 
 export async function POST(request: Request) {
@@ -45,6 +47,17 @@ export async function POST(request: Request) {
         { error: "Email and password are required" },
         { status: 400 },
       );
+    }
+
+    const trimmed = email.trim().toLowerCase();
+    if (!isValidEmail(trimmed)) {
+      return NextResponse.json({ error: "Email is invalid" }, { status: 400 });
+    }
+
+    const badPassword = isValidPassword(password);
+
+    if (badPassword) {
+      return NextResponse.json({ error: badPassword }, { status: 400 });
     }
 
     // validation check if user exists?
