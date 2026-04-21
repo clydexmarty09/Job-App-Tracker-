@@ -17,7 +17,7 @@ export default function Dashboard() {
     const router = useRouter(); // for checking proper proper user log in
     const [error, setError] = useState(""); 
     const [applications, setApplications] = useState<Application[]>([]) 
-    const [loading, setLoading] = useState(false) ;
+    //const [loading, setLoading] = useState(false) ;
     const [company, setCompany] = useState("");
     const [pay, setPay] =  useState(""); 
     const [status, setStatus] = useState(""); 
@@ -32,7 +32,10 @@ export default function Dashboard() {
     const [offset, setOffset] = useState(0); 
     const limit = 10; 
 
+    const [initialLoad, setInitialLoad] = useState(false); 
+    const [loadMore, setLoadMore] = useState(false); 
     const [hasFetched, setHasFetched] = useState(false); 
+    const [saving, setSaving] = useState(false); 
     //console.log(applications.length); 
 
     const loadMoreRef = useRef<HTMLDivElement | null>(null); 
@@ -42,14 +45,20 @@ export default function Dashboard() {
         setApplications([]);
         setOffset(0); 
         setHasMore(true); 
-        await fetchApplications(0); 
+        await fetchApplications(0, true); 
     }
 
-    async function fetchApplications(currentOffset : number) {
+    async function fetchApplications(currentOffset : number, isInitial = true) {
 
-        if(loading || !hasMore) return; 
+        if((initialLoad || loadMore) || !hasMore) return; 
 
-        setLoading(true); 
+        if(isInitial) {
+            setInitialLoad(true); 
+        } else {
+            setLoadMore(true); 
+        }
+
+        // setLoading(true); 
         setError(""); 
         // const id = localStorage.getItem("userId") 
 
@@ -67,7 +76,7 @@ export default function Dashboard() {
 
             if(!response.ok) {
                 setError(data.error || "Failed to load applications"); 
-                setLoading(false); 
+                // setLoading(false); 
                 return; 
             } 
 
@@ -75,7 +84,9 @@ export default function Dashboard() {
             // setTotalPages (data.totalPages); 
             // setTotalCount(data.totalCount); 
             setApplications((prev)=> [...prev, ...data.applications]); 
-            setOffset(currentOffset + limit); 
+            setOffset(currentOffset + limit);
+            
+            console.log(currentOffset);  
 
             if(!data.hasMore) {
                 setHasMore(false); 
@@ -85,7 +96,13 @@ export default function Dashboard() {
             setError("Failed to load applications")
 
         } finally {
-            setLoading(false); 
+            //setLoading(false); 
+            
+            if(isInitial) {
+                setInitialLoad(false); 
+            } else {
+                setLoadMore(false); 
+            }
             setHasFetched(true); 
         }
     }
@@ -93,7 +110,7 @@ export default function Dashboard() {
     async function handleApplication(e: any) {
         e.preventDefault(); 
         setError("");
-        setLoading(true);  
+        // setLoading(true);  
 
         // const userId = localStorage.getItem("userId"); 
 
@@ -132,7 +149,7 @@ export default function Dashboard() {
         } catch {
             setError("Failed to create applications")
         } finally {
-            setLoading(false);
+            //setLoading(false);
         }
     }
 
@@ -247,7 +264,7 @@ export default function Dashboard() {
                     return; 
                 }
 
-                await fetchApplications(0); 
+                await fetchApplications(0, true); 
             } catch {
                 router.push("/login"); 
             }
@@ -262,11 +279,11 @@ export default function Dashboard() {
             (entries) => { // function runs whenever the watched elements visibility changes 
                 const first = entries[0];  // bottom marker div 
 
-                if(first.isIntersecting && hasMore && !loading) { // check if the watched element is visible on the viewport 
-                    fetchApplications(offset);  // load next chunk starting from the current offset 
+                if(first.isIntersecting && hasMore && !loadMore) { // check if the watched element is visible on the viewport 
+                    fetchApplications(offset, false);  // load next chunk starting from the current offset 
                 }
             }, 
-            { threshold : 1 }  // only trigger when the element is fully visible 
+            { threshold : 0.1 }  // only trigger when the element is fully visible 
         ); 
 
         const current = loadMoreRef.current; // grabs the actual DOM the ref is pointing to 
@@ -281,7 +298,7 @@ export default function Dashboard() {
                 observer.unobserve(current)
             }
         }; 
-    }, [offset, hasMore, loading])
+    }, [offset, hasMore, loadMore])
 
     function getStatusColor(status: string | null) {
 
@@ -387,18 +404,19 @@ export default function Dashboard() {
                     </select> 
                        
     
-                    <button className="hover:scale-105 transition border w-full rounded-md border-gray-500 bg-blue-300/60 p-1" type="submit" disabled={loading}> 
-                        {loading ? "Saving..." : "Add Application"}
+                    <button className="hover:scale-105 transition border w-full rounded-md border-gray-500 bg-blue-300/60 p-1" type="submit" disabled={saving}> 
+                        {saving ? "Saving..." : "Add Application"}
                     </button>
 
                 </form>
             </div>
 
-            {loading || !hasFetched ? (
-                <p> Loading... </p> ) : 
-            applications.length === 0 ? (
-                <p className="text-red-600/80"> No applications yet. </p>
-            ): (
+            {initialLoad || !hasFetched ? 
+            (   <p> Loading... </p> ) : 
+            applications.length === 0 ? 
+            (   <p className="text-red-600/80"> No applications yet. </p>):
+        
+            (
                 <div 
                 className="pt-4 flex flex-col text-xs md:text-sm gap-4">   
                     {applications.map((app)=> (
@@ -457,11 +475,17 @@ export default function Dashboard() {
                         
                     ))}
 
+                    {loadMore && (
+                        <p className="text-center py-3 text-gray-500"> Loading more... </p>
+                    )}
+
+                    <div ref={loadMoreRef} className="h-1"> </div>
+
                     {/* <div className="flex items-center text-center gap-4 py-4"> 
                             <button className="prev-next" type="button" onClick={()=> setPage((prev)=> prev - 1)} disabled={page === 1 || loading }> PREVIOUS </button>
                             <button className="prev-next" type="button" onClick={()=> setPage((prev)=> prev + 1)} disabled={page === totalPages || loading }> NEXT </button>
                     </div>  */}
-                    <div ref={loadMoreRef} className="h-10"> </div>
+                  
 
                 </div>
 
