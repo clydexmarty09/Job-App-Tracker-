@@ -11,10 +11,57 @@ export default function Register() {
     const [email, setEmail] = useState(""); 
     const [password, setPassword] = useState(""); 
 
+
+    function isValidEmail(email: string) {
+        const trimmed = email.trim().toLowerCase();
+
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed);
+        }
+
+    function isValidPassword(pw: string) {
+        if (pw.length < 8) {
+            return "Password must be at least 8 characters long";
+        }
+
+        if (!/[a-z]/.test(pw)) {
+            return "Password must contain at least one lowercase letter";
+        }
+
+        if (!/[A-Z]/.test(pw)) {
+            return "Password must contain at least one uppercase letter";
+        }
+
+        if (!/[0-9]/.test(pw)) {
+            return "Password must contain at least one number";
+        }
+
+        return null;
+    }
+
     async function handleSubmit(e: any) {
         e.preventDefault(); 
         setError(""); 
         setLoading(true); 
+
+        const trimmedEmail = email.trim().toLowerCase(); 
+        if(!trimmedEmail) {
+            setError("Email is required"); 
+            return; 
+        }
+
+        if(!isValidEmail(trimmedEmail)) {
+            setError("Invalid Email"); 
+            setLoading(false);  
+            return;
+          
+        }
+
+        const badPassWord = isValidPassword(password); 
+        if(badPassWord) {
+            setError(badPassWord);
+            setLoading(false);  
+            return; 
+        }
 
         try {
 
@@ -75,7 +122,7 @@ export default function Register() {
             
 
             
-            {error && <p> {error} </p>}
+            {error && <p className="text-red-400 text-sm"> {error} </p>}
             </div>
             </div>
 
