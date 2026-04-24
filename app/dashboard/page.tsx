@@ -352,6 +352,29 @@ export default function Dashboard() {
         applications.filter((app)=> 
             app.status === "Rejected").length
 
+    const filteredApplications = applications.filter((app)=> {
+        const appDate = new Date(app.created_at); 
+
+        if(startDate) {
+            const start = new Date(startDate);
+
+             if(appDate < start) {
+                return false; 
+            }
+        }
+
+        if(endDate) {
+            const end = new Date(endDate); 
+            end.setHours(23,59,59,999); 
+
+            if(appDate < end) {
+                return false; 
+            }
+        }
+
+        return true; 
+    })
+
     return (
         
         <main className="min-h-dvh w-full max-w-6xl p-4 m-auto flex flex-col"> 
@@ -388,6 +411,18 @@ export default function Dashboard() {
                 onChange={(e)=> setEndDate(e.target.value)}
                 >
                 </input>
+
+                <button type="button" 
+                className="border rounded-md px-3 py-1 text-xs"
+                onClick={()=> {
+                    setStartDate("")
+                    setEndDate("")
+                }}
+                > 
+                Clear
+                </button>
+
+                <p className="text-xs text-gray-500"> Showing {filteredApplications.length} of {applications.length} </p>
             </div>
          </div>
          
@@ -463,7 +498,7 @@ export default function Dashboard() {
             (
                 <div 
                 className="pt-4 flex flex-col text-xs md:text-sm gap-4">   
-                    {applications.map((app)=> (
+                    {filteredApplications.map((app)=> (
                         <div className="border p-3 md:p-0 rounded-lg border-gray-300 shadow-sm md:border-none grid grid-cols-1 md:grid-cols-7 gap-3 md:gap-6 md:items-center" key={app.id}> 
                         <p> 
                             <span className="font-semibold"> Company: </span>
