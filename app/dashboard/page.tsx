@@ -8,7 +8,7 @@ type Application = {
     position: string; 
     pay: number | null; 
     status: string | null; 
-    created_at : string;
+    created_at : string; 
     location: string;  
 }; 
 
@@ -36,7 +36,11 @@ export default function Dashboard() {
     const [loadMore, setLoadMore] = useState(false); 
     const [hasFetched, setHasFetched] = useState(false); 
     const [saving, setSaving] = useState(false); 
-    //console.log(applications.length); 
+    //console.log(applications.length);
+    
+    // for filtering/searching 
+    const [startDate, setStartDate] = useState<string>("");
+    const [endDate, setEndDate] = useState<string>("");  
 
     const loadMoreRef = useRef<HTMLDivElement | null>(null); 
     //const fetchingRef = useRef(false); 
@@ -47,6 +51,13 @@ export default function Dashboard() {
         setOffset(0); 
         setHasMore(true); 
         await fetchApplications(0, true); 
+    }
+
+    function fetchFilteredApplications(start: string, end: string) {
+        setStartDate(start); 
+        setEndDate(end); 
+
+
     }
 
     async function fetchApplications(currentOffset : number, isInitial = false) {
@@ -355,6 +366,29 @@ export default function Dashboard() {
             <p className="text-right"> Interviewed: <span className="text-blue-700 font-bold">  {interviewTotal}</span> </p>
             <p className="text-right"> Accepted: <span className="text-green-700 font-bold"> {offerTotal} </span> </p>
             <p className="text-right"> Denied: <span className="text-red-700 font-bold"> {rejectedTotal} </span> </p>
+         </div>
+
+         <div className="border rounded-lg border-gray-500/50 p-3 my-2" > 
+            <h2> Filter by date </h2>
+           <div className="flex gap-3 py-2"> 
+                <input
+                placeholder="From (start date)"
+                className="w-full border rounded-md p-1 text-xs "
+                type="date"
+                value={startDate}
+                onChange={(e)=> setStartDate(e.target.value)}
+                
+                ></input>
+
+                <input
+                placeholder="To (end date)"
+                className="w-full border rounded-md p-1 text-xs "
+                type="date"
+                value={endDate}
+                onChange={(e)=> setEndDate(e.target.value)}
+                >
+                </input>
+            </div>
          </div>
          
             <h1 className="text-center py-6 md:py-10 text-2xl md:text-3xl font-semibold"> DASHBOARD</h1>
