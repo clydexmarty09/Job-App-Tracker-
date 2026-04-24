@@ -42,6 +42,9 @@ export default function Dashboard() {
     const [startDate, setStartDate] = useState<string>("");
     const [endDate, setEndDate] = useState<string>("");  
 
+    // for toggling different parts of the page for cleaner UI 
+    const [showForm, setShowForm] = useState(false); 
+
     const loadMoreRef = useRef<HTMLDivElement | null>(null); 
     //const fetchingRef = useRef(false); 
 
@@ -62,8 +65,10 @@ export default function Dashboard() {
 
     async function fetchApplications(currentOffset : number, isInitial = false) {
 
-        if((initialLoad || loadMore) || !hasMore) return; 
+        //if((initialLoad || loadMore) || !hasMore) return; 
        
+        if(initialLoad || loadMore) return; 
+        if(!isInitial && !hasMore) return; 
 
         if(isInitial) {
             setInitialLoad(true); 
@@ -367,7 +372,7 @@ export default function Dashboard() {
             const end = new Date(endDate); 
             end.setHours(23,59,59,999); 
 
-            if(appDate < end) {
+            if(appDate > end) {
                 return false; 
             }
         }
@@ -377,118 +382,143 @@ export default function Dashboard() {
 
     return (
         
-        <main className="min-h-dvh w-full max-w-6xl p-4 m-auto flex flex-col"> 
+        <main className="min-h-dvh w-full max-w-6xl gap-6 p-4 m-auto flex flex-col"> 
 
-        <div> 
-               <button className="underline text-baseline md:text-lg hover:text-blue-400" onClick={()=> logOut()}> Log Out  </button>
-        </div>
-
-         <div className="text-sm">
-            <p className="text-right"> Total Applications: <span className="font-bold"> {applicationsTotal} </span>  </p>
-            <p className="text-right"> Applied: <span className="text-amber-500 font-bold"> {appliedTotal} </span> </p>
-            <p className="text-right"> Interviewed: <span className="text-blue-700 font-bold">  {interviewTotal}</span> </p>
-            <p className="text-right"> Accepted: <span className="text-green-700 font-bold"> {offerTotal} </span> </p>
-            <p className="text-right"> Denied: <span className="text-red-700 font-bold"> {rejectedTotal} </span> </p>
-         </div>
-
-         <div className="border rounded-lg border-gray-500/50 p-3 my-2" > 
-            <h2> Filter by date </h2>
-           <div className="flex gap-3 py-2"> 
-                <input
-                placeholder="From (start date)"
-                className="w-full border rounded-md p-1 text-xs "
-                type="date"
-                value={startDate}
-                onChange={(e)=> setStartDate(e.target.value)}
+        <header className="flex items-center justify-between">
+            <div> 
+                <h1 className="text-2xl md:text-3xl font-semibold"> DASHBOARD</h1>
+                <p className="text-sm text-gray-500"> Track and manage your job applications </p>
                 
-                ></input>
-
-                <input
-                placeholder="To (end date)"
-                className="w-full border rounded-md p-1 text-xs "
-                type="date"
-                value={endDate}
-                onChange={(e)=> setEndDate(e.target.value)}
-                >
-                </input>
-
-                <button type="button" 
-                className="border rounded-md px-3 py-1 text-xs"
-                onClick={()=> {
-                    setStartDate("")
-                    setEndDate("")
-                }}
-                > 
-                Clear
-                </button>
-
-                <p className="text-xs text-gray-500"> Showing {filteredApplications.length} of {applications.length} </p>
             </div>
-         </div>
-         
-            <h1 className="text-center py-6 md:py-10 text-2xl md:text-3xl font-semibold"> DASHBOARD</h1>
+            <button className="underline md:text-lg hover:text-blue-400" onClick={()=> logOut()}> Log Out  </button>
+        </header>
 
-            { error && <p> {error}</p>}
-            <div className="md:w-full flex justify-center md:justify-start">
-                <form className="w-full mx-auto md:mx-0 max-w-sm rounded-lg p-5 flex flex-col gap-4
-                md:max-w-none md:p-0 md:flex-row" onSubmit={handleApplication}> 
-            
+        <section className="rounded-2xl border border-gray-300/50 p-4 my-2 shadow-sm">
+            <div className="text-sm grid grid-cols-2 gap-3 md:grid-cols-5">
+                <p className="text-xs"> Total Applications: <span className="font-bold"> {applicationsTotal} </span>  </p>
+                <p className="text-xs text-right md:text-left"> Applied: <span className="text-amber-500 font-bold"> {appliedTotal} </span> </p>
+                <p className="text-xs"> Interviewed: <span className="text-blue-700 font-bold">  {interviewTotal}</span> </p>
+                <p className="text-xs text-right md:text-left"> Accepted: <span className="text-green-700 font-bold"> {offerTotal} </span> </p>
+                <p className="text-xs"> Denied: <span className="text-red-700 font-bold"> {rejectedTotal} </span> </p>
+            </div>
+         </section>
+
+        <section className="border rounded-2xl border-gray-300/50 p-3 shadow-sm" > 
+            <div> 
+                <h2> Filter by date </h2>
+            <div className="flex gap-3 py-2"> 
+                
                     <input
-                    className="border border-gray-400 rounded p-2"
-                    value={company}
-                    type="text"
-                    placeholder="Insert company"
-                    required
-                    onChange={(e)=> setCompany(e.target.value)}
-                    />
+                    placeholder="From (start date)"
+                    className="w-full border rounded-md p-1 text-xs "
+                    type="date"
+                    value={startDate}
+                    onChange={(e)=> setStartDate(e.target.value)}
                     
-            
-                    <input
-                    className="border border-gray-400 rounded p-2"
-                    value={position}
-                    type="text"
-                    placeholder="Insert position"
-                    required
-                    onChange={(e)=> setPosition(e.target.value)}
-                    />
-                    
-            
-                    <input
-                    className="border border-gray-400 rounded p-2"
-                    value={pay}
-                    type="number"
-                    placeholder="Insert pay"
-                    onChange={(e)=> setPay(e.target.value)}
-                    /> 
+                    ></input>
 
-                    <input className="border border-gray-400 rounded p-2"
-                    value={location}
-                    type="text"
-                    placeholder="Insert Location"
-                    onChange={(e)=> setLocation(e.target.value)}
-                    />
-
-                    <select
-                    className={`border border-gray-400 p-2 rounded ${getStatusColor(status)}`}
-                    value={status}
-                    onChange={(e)=> setStatus(e.target.value)}
-                    required
+                    <input
+                    placeholder="To (end date)"
+                    className="w-full border rounded-md p-1 text-xs "
+                    type="date"
+                    value={endDate}
+                    onChange={(e)=> setEndDate(e.target.value)}
                     >
-                        <option value=""> No status </option>
-                        <option value="Applied"> Applied </option> 
-                        <option value="Interviewed"> Interviewed </option>
-                        <option value="Offer"> Offer </option>
-                        <option value="Rejected"> Rejected </option>
-                        
-                    </select> 
-                       
-    
-                    <button className="hover:scale-105 transition border w-full rounded-md border-gray-500 bg-blue-300/60 p-1" type="submit" disabled={saving}> 
-                        {saving ? "Saving..." : "Add Application"}
+                    </input>
+
+                    <button type="button" 
+                    className="border rounded-md px-3 py-1 text-xs"
+                    onClick={()=> {
+                        setStartDate("")
+                        setEndDate("")
+                    }}
+                    > 
+                    Clear
                     </button>
 
-                </form>
+                    <p className="text-xs text-gray-500"> Showing {filteredApplications.length} of {applications.length} </p>
+
+                </div>
             </div>
+         </section>
+        
+                    
+            { error && <p> {error}</p>}
+            <section className="border rounded-2xl border-gray-300/50 shadow-sm p-4">
+                <button
+                type="button"
+                className="w-full flex items-center justify-between"
+                onClick={()=> setShowForm((prev)=> !prev)}
+                >
+                    <div className="text-left">
+                        <h2 className="text-lg font-semibold my-2"> Add Application</h2>
+                        <p className="text-sm text-gray-500 my-2"> Create a new job application entry </p>
+                    </div> 
+                    <span className="text-sm"> {showForm ? "Hide" : "Add+"} </span>
+                
+                </button>
+
+                {showForm && (
+                    <form className="grid grid-cols-1 md:grid-cols-6 gap-3" onSubmit={handleApplication}> 
+                
+                        <input
+                        className="border border-gray-400 rounded p-2"
+                        value={company}
+                        type="text"
+                        placeholder="Insert company"
+                        required
+                        onChange={(e)=> setCompany(e.target.value)}
+                        />
+                        
+                
+                        <input
+                        className="border border-gray-400 rounded p-2"
+                        value={position}
+                        type="text"
+                        placeholder="Insert position"
+                        required
+                        onChange={(e)=> setPosition(e.target.value)}
+                        />
+                        
+                
+                        <input
+                        className="border border-gray-400 rounded p-2"
+                        value={pay}
+                        type="number"
+                        placeholder="Insert pay"
+                        onChange={(e)=> setPay(e.target.value)}
+                        /> 
+
+                        <input className="border border-gray-400 rounded p-2"
+                        value={location}
+                        type="text"
+                        placeholder="Insert Location"
+                        onChange={(e)=> setLocation(e.target.value)}
+                        />
+
+                        <select
+                        className={`border border-gray-400 p-2 rounded ${getStatusColor(status)}`}
+                        value={status}
+                        onChange={(e)=> setStatus(e.target.value)}
+                        required
+                        >
+                            <option value=""> No status </option>
+                            <option value="Applied"> Applied </option> 
+                            <option value="Interviewed"> Interviewed </option>
+                            <option value="Offer"> Offer </option>
+                            <option value="Rejected"> Rejected </option>
+                            
+                        </select> 
+                        
+        
+                        <button className="hover:scale-105 transition border w-full rounded-md border-gray-500 bg-blue-300/60 p-1" type="submit" disabled={saving}> 
+                            {saving ? "Saving..." : "Add Application"}
+                        </button>
+
+                        </form>
+                )}
+              
+            </section> 
 
             {initialLoad || !hasFetched ? 
             (   <p> Loading... </p> ) : 

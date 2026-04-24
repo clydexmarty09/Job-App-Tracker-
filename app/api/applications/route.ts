@@ -67,7 +67,7 @@ export async function GET(request: Request) {
       `SELECT id, company, position, pay, status, created_at, location
             FROM applications
             WHERE user_id = $1
-            ORDER BY created_at DESC
+            ORDER BY created_at DESC, id DESC
             LIMIT $2 OFFSET $3`,
       [userId, limit, offset],
     );
