@@ -43,10 +43,11 @@ export default function Dashboard() {
     const [endDate, setEndDate] = useState<string>("");  
 
     // for toggling different parts of the page for cleaner UI 
-    const [showForm, setShowForm] = useState(false); 
+    const [showForm, setShowForm] = useState(false);
+    const [showSort, setShowSort] = useState(false);  
 
     const loadMoreRef = useRef<HTMLDivElement | null>(null); 
-    //const fetchingRef = useRef(false); 
+    const fetchingRef = useRef(false); 
 
     // page refresh helper 
     async function refresh() {
@@ -56,14 +57,25 @@ export default function Dashboard() {
         await fetchApplications(0, true); 
     }
 
-    function fetchFilteredApplications(start: string, end: string) {
-        setStartDate(start); 
-        setEndDate(end); 
+    // helper functions for getting the date right
+    function startLocalDay(date: string) {
+        const [year, month, day] = date.split("-").map(Number); 
 
+        return new Date(year, month - 1, day, 0,0,0,0);  // new Date(year,month, day, hour, minute, second, milisecond)
+    }
 
+    function endLocalDay(date: string) {
+        const [year, month, day] = date.split("-").map(Number); 
+
+        return new Date(year, month - 1, day, 23, 59,59, 999); 
     }
 
     async function fetchApplications(currentOffset : number, isInitial = false) {
+
+        // debugging
+        console.log("Fetching offset", currentOffset); 
+        if(fetchingRef.current) return; 
+        fetchingRef.current = true; 
 
         //if((initialLoad || loadMore) || !hasMore) return; 
        
@@ -125,6 +137,7 @@ export default function Dashboard() {
                
             }
             setHasFetched(true); 
+            fetchingRef.current = false; 
         }
     }
 
@@ -359,9 +372,10 @@ export default function Dashboard() {
 
     const filteredApplications = applications.filter((app)=> {
         const appDate = new Date(app.created_at); 
+        
 
         if(startDate) {
-            const start = new Date(startDate);
+            const start = startLocalDay(startDate);
 
              if(appDate < start) {
                 return false; 
@@ -369,7 +383,7 @@ export default function Dashboard() {
         }
 
         if(endDate) {
-            const end = new Date(endDate); 
+            const end = endLocalDay(endDate); 
             end.setHours(23,59,59,999); 
 
             if(appDate > end) {
@@ -404,42 +418,53 @@ export default function Dashboard() {
          </section>
 
         <section className="border rounded-2xl border-gray-300/50 p-3 shadow-sm" > 
-            <div> 
-                <h2> Filter by date </h2>
-            <div className="flex gap-3 py-2"> 
-                
-                    <input
-                    placeholder="From (start date)"
-                    className="w-full border rounded-md p-1 text-xs "
-                    type="date"
-                    value={startDate}
-                    onChange={(e)=> setStartDate(e.target.value)}
+            <button
+            type="button"
+            onClick={()=> setShowSort((prev)=> !prev)}
+            className="w-full flex items-center justify-between"
+            >
+                <div className="text-left"> 
+                    <h2 className="font-semibold"> Filter by date </h2>
+                </div> 
+                 <span className="text-sm"> {showSort ? "Hide": "Filter"} </span>
+            </button> 
+
+            {showSort && 
+                <div className="flex gap-3 py-2"> 
                     
-                    ></input>
+                        <input
+                        placeholder="From (start date)"
+                        className="w-full border rounded-md p-1 text-xs "
+                        type="date"
+                        value={startDate}
+                        onChange={(e)=> setStartDate(e.target.value)}
+                        
+                        ></input>
 
-                    <input
-                    placeholder="To (end date)"
-                    className="w-full border rounded-md p-1 text-xs "
-                    type="date"
-                    value={endDate}
-                    onChange={(e)=> setEndDate(e.target.value)}
-                    >
-                    </input>
+                        <input
+                        placeholder="To (end date)"
+                        className="w-full border rounded-md p-1 text-xs "
+                        type="date"
+                        value={endDate}
+                        onChange={(e)=> setEndDate(e.target.value)}
+                        >
+                        </input>
 
-                    <button type="button" 
-                    className="border rounded-md px-3 py-1 text-xs"
-                    onClick={()=> {
-                        setStartDate("")
-                        setEndDate("")
-                    }}
-                    > 
-                    Clear
-                    </button>
+                        <button type="button" 
+                        className="border rounded-md px-3 py-1 text-xs"
+                        onClick={()=> {
+                            setStartDate("")
+                            setEndDate("")
+                        }}
+                        > 
+                        Clear
+                        </button>
 
-                    <p className="text-xs text-gray-500"> Showing {filteredApplications.length} of {applications.length} </p>
+                        <p className="text-xs text-gray-500"> Showing {filteredApplications.length} of {applications.length} </p>
 
-                </div>
-            </div>
+                    </div>
+                }   
+                
          </section>
         
                     
