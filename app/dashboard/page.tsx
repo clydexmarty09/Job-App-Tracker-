@@ -398,16 +398,16 @@ export default function Dashboard() {
         
         <main className="min-h-dvh w-full max-w-6xl gap-6 p-4 m-auto flex flex-col"> 
 
-        <header className="flex items-center justify-between">
+        <header className="flex items-center justify-between py-1">
             <div> 
-                <h1 className="text-2xl md:text-3xl font-semibold"> DASHBOARD</h1>
+                <h1 className="text-3xl md:text-3xl font-semibold"> DASHBOARD</h1>
                 <p className="text-sm text-gray-500"> Track and manage your job applications </p>
                 
             </div>
             <button className="underline md:text-lg hover:text-blue-400" onClick={()=> logOut()}> Log Out  </button>
         </header>
 
-        <section className="rounded-2xl border border-gray-300/50 p-4 my-2 shadow-sm">
+        <section className="top-sections">
             <div className="text-sm grid grid-cols-2 gap-3 md:grid-cols-5">
                 <p className="text-xs"> Total Applications: <span className="font-bold"> {applicationsTotal} </span>  </p>
                 <p className="text-xs text-right md:text-left"> Applied: <span className="text-amber-500 font-bold"> {appliedTotal} </span> </p>
@@ -417,7 +417,7 @@ export default function Dashboard() {
             </div>
          </section>
 
-        <section className="border rounded-2xl border-gray-300/50 p-3 shadow-sm" > 
+        <section className="top-sections" > 
             <button
             type="button"
             onClick={()=> setShowSort((prev)=> !prev)}
@@ -426,7 +426,7 @@ export default function Dashboard() {
                 <div className="text-left"> 
                     <h2 className="font-semibold"> Filter by date </h2>
                 </div> 
-                 <span className="text-sm"> {showSort ? "Hide": "Filter"} </span>
+                 <span className="text-sm underline"> {showSort ? "Hide": "Filter"} </span>
             </button> 
 
             {showSort && 
@@ -469,17 +469,18 @@ export default function Dashboard() {
         
                     
             { error && <p> {error}</p>}
-            <section className="border rounded-2xl border-gray-300/50 shadow-sm p-4">
+            <section className="top-sections">
                 <button
                 type="button"
                 className="w-full flex items-center justify-between"
                 onClick={()=> setShowForm((prev)=> !prev)}
                 >
                     <div className="text-left">
-                        <h2 className="text-lg font-semibold my-2"> Add Application</h2>
-                        <p className="text-sm text-gray-500 my-2"> Create a new job application entry </p>
+                        <h2 className="font-semibold"> Add Application</h2>
+                        <p className="text-sm text-gray-500 my-1"> Create a new job application entry </p>
                     </div> 
-                    <span className="text-sm"> {showForm ? "Hide" : "Add+"} </span>
+                    <span className="text-sm underline"> {showForm ? "Hide" : "Add+"} </span>
+                    
                 
                 </button>
 
@@ -536,7 +537,7 @@ export default function Dashboard() {
                         </select> 
                         
         
-                        <button className="hover:scale-105 transition border w-full rounded-md border-gray-500 bg-blue-300/60 p-1" type="submit" disabled={saving}> 
+                        <button className="btn-2" type="submit" disabled={saving}> 
                             {saving ? "Saving..." : "Add Application"}
                         </button>
 
@@ -551,8 +552,8 @@ export default function Dashboard() {
             (   <p className="text-red-600/80"> No applications yet. </p>):
         
             (
-                <div 
-                className="pt-4 flex flex-col text-xs md:text-sm gap-4">   
+                <div className="pt-4 flex flex-col text-xs md:text-sm gap-4">   
+                <h2 className="font-semibold text-2xl tex-center"> CURRENT APPLICATIONS </h2>
                     {filteredApplications.map((app)=> (
                         <div className="border p-3 md:p-0 rounded-lg border-gray-300 shadow-sm md:border-none grid grid-cols-1 md:grid-cols-7 gap-3 md:gap-6 md:items-center" key={app.id}> 
                         <p> 

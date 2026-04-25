@@ -60,12 +60,12 @@ export default function Login() {
                     placeholder="Password"
                     />
 
-                    <button className="btn-submit" type="submit"> Login </button>
+                    <button className="btn-1" type="submit"> Login </button>
                 </form>
 
                
 
-            {error && <p className="text-red-600 text-xs p-2"> {error} </p>}
+            {error && <p className="text-red-600 text-sm p-2"> {error} </p>}
          </div> 
          </div> 
 

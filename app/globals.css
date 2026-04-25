@@ -6,13 +6,25 @@
 }
 
 @layer components {
-  .btn-submit {
+  .btn-1 {
     @apply hover:scale-105 transition text-sm md:text-base w-full active:scale-95
     md:w-40 border rounded border-gray-500 bg-blue-300/60 p-2 md:p-3;
   }
 
+  .btn-2 {
+    @apply hover:scale-105 transition border w-full rounded-md border-gray-500 bg-blue-300/60 p-1; 
+  }
+
+  .btn-3 {
+    @apply w-full items-center justify-between hover:scale-105 transition border rounded-md border-gray-500 bg-green-400/60 p-1; 
+  }
+
   .form-preset {
     @apply p-4 flex flex-col md:flex-row gap-10 md:gap-20; 
+  }
+
+  .top-sections {
+    @apply border rounded-2xl border-gray-300/50 px-3 py-2 shadow-sm; 
   }
 
   .delete-btn {
