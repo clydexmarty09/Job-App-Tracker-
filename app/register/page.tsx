@@ -12,6 +12,7 @@ export default function Register() {
     const [password, setPassword] = useState(""); 
 
 
+
     function isValidEmail(email: string) {
         const trimmed = email.trim().toLowerCase();
 
@@ -71,7 +72,7 @@ export default function Register() {
                     "Content-Type": "application/json", 
                 }, 
                 body: JSON.stringify({
-                    trimmedEmail, password, 
+                    email:trimmedEmail, password, 
                 }), 
             }); 
 
