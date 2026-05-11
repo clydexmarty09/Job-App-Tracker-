@@ -6,35 +6,6 @@ import { db } from "@/lib/db";
 import { getLoggedInUserId } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-// import type { ResultSetHeader, RowDataPacket } from "mysql2";
-
-// type SessionRow = RowDataPacket & {
-//   user_id: string;
-// };
-
-// reads session cookie, looks up session in db, return logged in user's id
-// async function getLoggedInUserId() {
-//   const cookieStore = await cookies(); // a collection of cookeis :)
-//   const sessionId = cookieStore.get("sessionId")?.value; // finds a cookie names session id and get its value, else return undefined
-
-//   if (!sessionId) {
-//     return null;
-//   }
-
-//   // database lookup
-//   const [sessionRows] = await db.execute<SessionRow[]>(
-//     `SELECT user_id
-//     FROM sessions
-//     WHERE id = ?`,
-//     [sessionId],
-//   );
-
-//   if (sessionRows.length === 0) {
-//     return null;
-//   }
-
-//   return sessionRows[0].user_id; // if session row was found, returns user id from first row
-// }
 
 // DELETE route expects requests like DELETE /api/applications/abc123
 export async function DELETE(

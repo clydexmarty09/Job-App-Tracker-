@@ -46,6 +46,9 @@ export default function Dashboard() {
     const [showForm, setShowForm] = useState(false);
     const [showSort, setShowSort] = useState(false);  
 
+    // for searching 
+    const [companySearch, setCompanySearch] = useState("");  
+
     const loadMoreRef = useRef<HTMLDivElement | null>(null); 
     const fetchingRef = useRef(false); 
 
@@ -372,7 +375,17 @@ export default function Dashboard() {
 
     const filteredApplications = applications.filter((app)=> {
         const appDate = new Date(app.created_at); 
-        
+       
+        if(companySearch) {
+            const companyMatches = app.company 
+                .toLowerCase()
+                .includes(companySearch.toLowerCase()); 
+
+            if(!companyMatches) {
+            return false; 
+            }
+        }
+
 
         if(startDate) {
             const start = startLocalDay(startDate);
@@ -553,7 +566,20 @@ export default function Dashboard() {
         
             (
                 <div className="pt-4 flex flex-col text-xs md:text-sm gap-4">   
+
+
+
                 <h2 className="font-semibold text-2xl tex-center"> CURRENT APPLICATIONS </h2>
+                    <section className="top-sections">
+                       
+                        <input 
+                        value={companySearch}
+                        onChange={(e)=> setCompanySearch(e.target.value)}
+                        type="text"
+                        placeholder="Search Company"
+                        className="border rounded-md border-gray-400 p-1 my-1 placeholder:text-sm"
+                        />
+                </section>
                     {filteredApplications.map((app)=> (
                         <div className="border p-3 md:p-0 rounded-lg border-gray-300 shadow-sm md:border-none grid grid-cols-1 md:grid-cols-7 gap-3 md:gap-6 md:items-center" key={app.id}> 
                         <p> 
@@ -598,7 +624,7 @@ export default function Dashboard() {
 
                         <p> 
                             <span className="font-semibold"> Added: </span>
-                            <span className="text-gray-800/70 wrap-break-word"> {new Date(app.created_at).toLocaleString()} </span>
+                            <span className="text-gray-500 wrap-break-word"> {new Date(app.created_at).toLocaleString()} </span>
                         </p>
 
                         <button className="delete-btn" onClick={()=> handleDelete(app.id)}> DELETE</button>
