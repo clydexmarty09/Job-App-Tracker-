@@ -67,9 +67,7 @@ export default function Login() {
 
             {error && <p className="text-red-600 text-sm p-2"> {error} </p>}
              <Link href="/password-reset" className="mt-2 text-blue-500/80 text-sm"> Forgot Password? </Link>
-         </div> 
-
-           
+         </div>            
          </div> 
         
 

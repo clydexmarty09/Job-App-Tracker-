@@ -2,19 +2,33 @@
 import { useState } from "react"; 
 
 
-export default function PasswordReset() {
+export default function ForgotPasswordRequest() {
 
     const [email, setEmail] = useState("")
     const [error, setError] = useState<string>(""); 
     const [loading, setLoading] = useState(false); 
 
-    const sendEmail = async () => {
+    const sendEmail = async (e:React.SubmitEvent<HTMLFormElement>) => {
 
+        e.preventDefault(); 
         setLoading(true); 
         setError(""); 
 
         try {
-            const res = await fetch(`/api/`)
+            const res = await fetch(`/api/auth/password-reset`, 
+                 {
+                    method: "POST", 
+                    headers:  {
+                        "Content-Type": "application/json", 
+                    },  body: JSON.stringify({ email }), 
+            }); 
+        
+            if(!res.ok) {
+                setError("An error has occured.")
+                return; 
+            }
+                 
+                 
         } catch (e) {
             console.error(e); 
             setError("Cannot send email"); 
@@ -32,7 +46,7 @@ export default function PasswordReset() {
                     <h1 className="text-center font-medium text-2xl p-3"> RESET PASSWORD</h1>
                     <p className="text-gray-500 text-sm my-2"> Please enter your email: </p>
                     
-                    <form className="form-preset">
+                    <form className="form-preset" onSubmit={sendEmail} >
                         <input
                         className="form-input"
                         placeholder="Email"
@@ -40,9 +54,12 @@ export default function PasswordReset() {
                         onChange={(e)=> setEmail(e.target.value)}
                         />
 
-                        <button className="btn-1" type="submit"> Submit </button>
+                        <button disabled={loading} className="btn-1" type="submit"> {loading ? "Submitting..." : "Submit "} </button>
 
                     </form>
+                    {error && (
+                        <p className="text-red-500/80 text-sm"> {error} </p>
+                    )}
                 </div>
             </div>
 
