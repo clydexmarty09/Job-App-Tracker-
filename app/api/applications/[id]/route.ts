@@ -5,7 +5,6 @@ this file reads a session cookie, finds the logged in user, and only modify rows
 import { db } from "@/lib/db";
 import { getLoggedInUserId } from "@/lib/auth";
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 
 // DELETE route expects requests like DELETE /api/applications/abc123
 export async function DELETE(

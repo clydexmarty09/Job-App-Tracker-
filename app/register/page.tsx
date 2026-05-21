@@ -1,5 +1,5 @@
 "use client"; 
-import { useEffect, useState } from "react"; 
+import { useState } from "react"; 
 import { useRouter } from "next/navigation"; 
 import Link from "next/link";
 
@@ -97,8 +97,8 @@ export default function Register() {
     return(
      <main className="landing-page">
         {/*flex-1 expands to fill all the remaining vertical space */}
-        <div className="flex-1 flex items-center justify-center md:items-start md:pt-20">
-         <div className="w-full max-w-md flex flex-col items-center">
+        <div className="landing-page-outer-div">
+         <div className="landing-page-inner-div">
             <h1 className="text-2xl font-medium p-3"> REGISTER </h1>
    
             <form className="form-preset" onSubmit={handleSubmit}> 

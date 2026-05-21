@@ -38,8 +38,8 @@ export default function Login() {
    
     return(
        <main className="landing-page">
-            <div className="flex-1 flex items-center justify-center md:items-start md:pt-20">
-            <div className="w-full max-w-md flex flex-col items-center">
+            <div className="landing-page-outer-div">
+            <div className="landing-page-inner-div">
                 <h1 className="text-center font-medium text-2xl p-3"> LOGIN</h1>
 
 
@@ -66,8 +66,13 @@ export default function Login() {
                
 
             {error && <p className="text-red-600 text-sm p-2"> {error} </p>}
+             <Link href="/password-reset" className="mt-2 text-blue-500/80 text-sm"> Forgot Password? </Link>
          </div> 
+
+           
          </div> 
+        
+
 
           <p className="text-center text-xs text-gray-700 mt-auto p-5"> Don't have an account? <span> <Link className="text-blue-500/80 hover:underline" href="/register"> Register </Link> instead </span> </p>
         </main>
