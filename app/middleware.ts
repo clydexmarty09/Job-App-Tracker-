@@ -1,7 +1,6 @@
 // middleware tuns BEFORE react loads, so we use NextRequest
 
 import { NextResponse, NextRequest } from "next/server";
-import { getLoggedInUserId } from "@/lib/auth";
 
 export async function middleware(request: NextRequest) {
   const sessionId = request.cookies.get("sessionId")?.value;

@@ -1,10 +1,5 @@
 import { cookies } from "next/headers";
 import { db } from "@/lib/db";
-//import type { RowDataPacket } from "mysql2";
-
-// type SessionRow = RowDataPacket & {
-//   user_id: string;
-// };
 
 export async function getLoggedInUserId() {
   try {
