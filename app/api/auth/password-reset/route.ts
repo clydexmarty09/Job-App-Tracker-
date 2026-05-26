@@ -18,10 +18,9 @@ export async function POST(request: Request) {
     );
 
     if (search.rows.length === 0) {
-      return NextResponse.json(
-        { error: "If user exists, an email will be sent." },
-        { status: 401 },
-      );
+      return NextResponse.json({
+        message: "If user exists, an email will be sent.",
+      });
     }
 
     const user = search.rows[0];
@@ -37,10 +36,14 @@ export async function POST(request: Request) {
         [resetTokenId, user.id, token, expiresAt],
       );
 
-      const resetLink = `http://localhost:3000/reset-password?token=${token}`;
+      const resetLink = `http://localhost:3000/forgot-password-request?token=${token}`;
 
       console.log("Password reset link", resetLink);
     }
+
+    return NextResponse.json({
+      message: "If user exists, an email will be sent",
+    });
   } catch {
     return NextResponse.json(
       { error: "Cannot submit request" },
