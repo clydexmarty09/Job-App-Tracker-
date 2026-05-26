@@ -46,6 +46,7 @@ export default function PasswordReset() {
                 setError("Cannot update password"); 
                 return; 
             }
+            
         } catch (e) {
             console.error(e)
             setError("Cannot update password"); 
