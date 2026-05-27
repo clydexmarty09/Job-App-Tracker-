@@ -7,12 +7,14 @@ export default function ForgotPasswordRequest() {
     const [email, setEmail] = useState("")
     const [error, setError] = useState<string>(""); 
     const [loading, setLoading] = useState(false); 
+    const [message, setMessage] = useState(""); 
 
     const sendEmail = async (e:React.SubmitEvent<HTMLFormElement>) => {
 
         e.preventDefault(); 
         setLoading(true); 
         setError(""); 
+        setMessage(""); 
 
         try {
             const res = await fetch(`/api/auth/password-reset`, 
@@ -22,11 +24,16 @@ export default function ForgotPasswordRequest() {
                         "Content-Type": "application/json", 
                     },  body: JSON.stringify({ email }), 
             }); 
+
+            const data = await res.json(); 
         
             if(!res.ok) {
-                setError("An error has occured.")
+                setError(data.error || "An error has occured.")
                 return; 
             }
+
+            setMessage(data.message); 
+
                  
                  
         } catch (e) {
@@ -59,6 +66,10 @@ export default function ForgotPasswordRequest() {
                     </form>
                     {error && (
                         <p className="text-red-500/80 text-sm"> {error} </p>
+                    )}
+
+                    {message && (
+                        <p className="text-green-500/80 text-sm"> {message} </p>
                     )}
                 </div>
             </div>

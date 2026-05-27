@@ -1,9 +1,11 @@
 "use client"; 
-import { useSearchParams} from "next/navigation";
+import { useSearchParams, useRouter} from "next/navigation";
 import { useState } from "react";
 
 export default function PasswordReset() {
     
+    const router = useRouter(); 
+
     const searchParams = useSearchParams(); 
     const token = searchParams.get("token"); 
 
@@ -12,6 +14,8 @@ export default function PasswordReset() {
 
     const [error, setError] = useState(""); 
     const [loading, setLoading] = useState(false); 
+
+    const[success, setSuccess] = useState(false); 
 
     const resetPassword = async(e:React.SubmitEvent<HTMLFormElement>) => {
         
@@ -46,6 +50,14 @@ export default function PasswordReset() {
                 setError("Cannot update password"); 
                 return; 
             }
+
+            setTimeout(()=> {
+                setSuccess(true); 
+
+                setTimeout(()=> setSuccess(false), 3000); 
+            }, 500)
+
+            router.push(`/login`); 
             
         } catch (e) {
             console.error(e)
@@ -88,6 +100,11 @@ export default function PasswordReset() {
                     {error && (
                         <p className="text-red-500/80 text-sm"> {error} </p>
                     )}
+
+                    {success && (
+                        <p className="text-green-500/80 text-sm"> Password reset succesfully! </p>
+                    )}
+
 
                 </div>
             </div>

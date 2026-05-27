@@ -36,7 +36,7 @@ export async function POST(request: Request) {
         [resetTokenId, user.id, token, expiresAt],
       );
 
-      const resetLink = `http://localhost:3000/forgot-password-request?token=${token}`;
+      const resetLink = `http://localhost:3000/reset-password?token=${token}`;
 
       console.log("Password reset link", resetLink);
     }
