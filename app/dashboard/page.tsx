@@ -47,7 +47,8 @@ export default function Dashboard() {
     const [showSort, setShowSort] = useState(false);  
 
     // for searching 
-    const [companySearch, setCompanySearch] = useState("");  
+    const [companySearch, setCompanySearch] = useState(""); 
+    const [statusFilter, setStatusFilter] = useState("");  
 
     const loadMoreRef = useRef<HTMLDivElement | null>(null); 
     const fetchingRef = useRef(false); 
@@ -375,6 +376,12 @@ export default function Dashboard() {
 
     const filteredApplications = applications.filter((app)=> {
         const appDate = new Date(app.created_at); 
+
+        if(statusFilter) {
+            if(app.status !== statusFilter) {
+                return false; 
+            }
+        }
        
         if(companySearch) {
             const companyMatches = app.company 
@@ -385,7 +392,6 @@ export default function Dashboard() {
             return false; 
             }
         }
-
 
         if(startDate) {
             const start = startLocalDay(startDate);
@@ -577,8 +583,23 @@ export default function Dashboard() {
                         onChange={(e)=> setCompanySearch(e.target.value)}
                         type="text"
                         placeholder="Search Company"
-                        className="border rounded-md border-gray-400 p-1 my-1 placeholder:text-sm"
+                        className="border rounded-md border-gray-400 p-1 my-1 placeholder:text-xs"
                         />
+{/* 
+                        <select
+                            className="border rounded-md border-gray-400 p-1 text-xs"
+                            value={statusFilter}
+                            onChange={(e)=> setStatusFilter(e.target.value)}
+                        >
+
+                            <option value="">All statuses</option>
+                            <option value="Applied">Applied</option>
+                            <option value="Interviewed">Interviewed</option>
+                            <option value="Offer">Offer</option>
+                            <option value="Rejected">Rejected</option>
+
+                        </select> */}
+                        
                 </section>
                     {filteredApplications.map((app)=> (
                         <div className="border p-3 md:p-0 rounded-lg border-gray-300 shadow-sm md:border-none grid grid-cols-1 md:grid-cols-7 gap-3 md:gap-6 md:items-center" key={app.id}> 
