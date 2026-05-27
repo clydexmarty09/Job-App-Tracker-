@@ -46,18 +46,21 @@ export default function PasswordReset() {
                 }, body: JSON.stringify({password: pw, token}), 
             })
 
+            const data = await res.json(); 
+
             if(!res.ok) {
-                setError("Cannot update password"); 
+                setError(data.error || "Cannot update password"); 
                 return; 
             }
 
+           
+
+            setSuccess(true); 
+
             setTimeout(()=> {
-                setSuccess(true); 
+                router.push(`/login`); 
+            }, 2000)
 
-                setTimeout(()=> setSuccess(false), 3000); 
-            }, 500)
-
-            router.push(`/login`); 
             
         } catch (e) {
             console.error(e)
@@ -102,7 +105,7 @@ export default function PasswordReset() {
                     )}
 
                     {success && (
-                        <p className="text-green-500/80 text-sm"> Password reset succesfully! </p>
+                        <p className="text-green-500/80 text-sm"> Password reset successfully! </p>
                     )}
 
 

@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
   try {
@@ -36,9 +39,19 @@ export async function POST(request: Request) {
         [resetTokenId, user.id, token, expiresAt],
       );
 
-      const resetLink = `http://localhost:3000/reset-password?token=${token}`;
+      const resetLink = `${process.env.APP_URL}/reset-password?token=${token}`;
 
       console.log("Password reset link", resetLink);
+      await resend.emails.send({
+        from: "Job App Tracker <onboarding@resend.dev>",
+        to: normalizedEmail,
+        subject: "Reset Your Password",
+        html: `
+        <p> You requested a password reset. </p> 
+        <p> <a href=${resetLink}> Reset your password </a></p> 
+        <p> This link expires in 1 hour.</p> 
+        `,
+      });
     }
 
     return NextResponse.json({
