@@ -5,31 +5,6 @@ import { db } from "@/lib/db";
 import { getLoggedInUserId } from "@/lib/auth";
 import { NextResponse } from "next/server";
 
-// type SessionRow = RowDataPacket & {
-//   user_id: string;
-// };
-
-// async function getLoggedInUserId() {
-//   const cookieStore = await cookies();
-//   const sessionId = cookieStore.get("sessionId")?.value;
-
-//   if (!sessionId) {
-//     return null;
-//   }
-
-//   const sessionRows = await db.query(
-//     `SELECT user_id
-//     FROM sessions
-//     WHERE id = $1`,
-//     [sessionId],
-//   );
-
-//   if (sessionRows.rows.length === 0) {
-//     return null;
-//   }
-//   return sessionRows.rows[0].user_id;
-// }
-
 export async function GET(request: Request) {
   try {
     // get url from the request
@@ -85,12 +60,39 @@ export async function GET(request: Request) {
     const totalCount = Number(countRes.rows[0].total);
     const totalPages = Math.ceil(totalCount / limit);
 
+    // check how applications are in each status
+    const statusCountRes = await db.query(
+      `SELECT status, COUNT(*) as total
+      FROM applications
+      WHERE user_id = $1
+      GROUP BY status`,
+      [userId],
+    );
+
+    // create a predictable object for the frontend
+    const statusCounts = {
+      Applied: 0,
+      Interviewed: 0,
+      Offer: 0,
+      Rejected: 0,
+    };
+
+    // loop through every grouped result in the database
+    for (const row of statusCountRes.rows) {
+      if (row.status in statusCounts) {
+        statusCounts[row.status as keyof typeof statusCounts] = Number(
+          row.total,
+        ); // updates the object
+      }
+    }
+
     // return page data and pagination info
     return NextResponse.json({
       applications: result.rows,
       limit,
       offset,
       totalCount,
+      statusCounts,
       hasMore: offset + result.rows.length < totalCount,
     });
   } catch (error) {
