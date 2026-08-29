@@ -116,7 +116,7 @@ export default function Dashboard() {
 
             //setApplications(data.applications);
             // setTotalPages (data.totalPages); 
-            // setTotalCount(data.totalCount); 
+            setTotalCount(data.totalCount); 
             setApplications((prev)=> [...prev, ...data.applications]);
             setOffset(currentOffset + limit);
             
@@ -208,9 +208,12 @@ export default function Dashboard() {
                 method: "DELETE", 
             }); 
 
+            const data = await res.json(); 
+
         
         if (!res.ok) {
-            throw new Error("Cannot delete data"); 
+            //throw new Error("Cannot delete data"); 
+            setError(data.error || "Canot delete data.")
         }
             
         //await fetchApplications(page); 
@@ -428,7 +431,7 @@ export default function Dashboard() {
 
         <section className="top-sections">
             <div className="text-sm grid grid-cols-2 gap-3 md:grid-cols-5">
-                <p className="text-xs"> Total Applications: <span className="font-bold"> {applicationsTotal} </span>  </p>
+                <p className="text-xs"> Total Applications: <span className="font-bold"> {totalCount} </span>  </p>
                 <p className="text-xs text-right md:text-left"> Applied: <span className="text-amber-500 font-bold"> {appliedTotal} </span> </p>
                 <p className="text-xs"> Interviewed: <span className="text-blue-700 font-bold">  {interviewTotal}</span> </p>
                 <p className="text-xs text-right md:text-left"> Accepted: <span className="text-green-700 font-bold"> {offerTotal} </span> </p>

@@ -35,7 +35,7 @@ export async function POST(request: Request) {
 
       await db.query(
         `INSERT INTO password_reset_tokens(id, user_id, token, expires_at)
-            VALUES ($1, $2, $3, $4)`,
+            VALUES ($1, $2, $3,  $4)`,
         [resetTokenId, user.id, token, expiresAt],
       );
 
