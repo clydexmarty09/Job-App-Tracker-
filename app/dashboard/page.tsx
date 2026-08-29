@@ -29,6 +29,13 @@ export default function Dashboard() {
     // const [totalPages, setTotalPages] = useState(1);
     const [totalCount, setTotalCount] = useState(0);  
     const [hasMore, setHasMore] = useState(true); 
+    const [statusCounts, setStatusCounts] = useState({ 
+        Applied: 0, 
+        Interviewed: 0,
+        Offer: 0, 
+        Rejected: 0,
+    }); 
+
     const [offset, setOffset] = useState(0); 
     const limit = 10; 
 
@@ -117,6 +124,7 @@ export default function Dashboard() {
             //setApplications(data.applications);
             // setTotalPages (data.totalPages); 
             setTotalCount(data.totalCount); 
+            setStatusCounts(data.statusCounts); 
             setApplications((prev)=> [...prev, ...data.applications]);
             setOffset(currentOffset + limit);
             
@@ -361,21 +369,25 @@ export default function Dashboard() {
     */
     const applicationsTotal = applications.length; 
     
-    const appliedTotal = 
-        applications.filter((app)=> 
-            app.status === "Applied").length; 
+    // const appliedTotal = 
+    //     applications.filter((app)=> 
+    //         app.status === "Applied").length; 
 
-    const offerTotal = 
-        applications.filter((app)=> 
-            app.status === "Offer").length; 
+    // const offerTotal = 
+    //     applications.filter((app)=> 
+    //         app.status === "Offer").length; 
 
-    const interviewTotal = 
-        applications.filter((app)=> 
-            app.status === "Interviewed").length; 
+    // const interviewTotal = 
+    //     applications.filter((app)=> 
+    //         app.status === "Interviewed").length; 
 
-    const rejectedTotal = 
-        applications.filter((app)=> 
-            app.status === "Rejected").length
+    // const rejectedTotal = 
+    //     applications.filter((app)=> 
+    //         app.status === "Rejected").length
+    const appliedTotal = statusCounts.Applied;
+    const offerTotal = statusCounts.Offer; 
+    const interviewTotal = statusCounts.Interviewed; 
+    const rejectedTotal = statusCounts.Rejected;  
 
     const filteredApplications = applications.filter((app)=> {
         const appDate = new Date(app.created_at); 
