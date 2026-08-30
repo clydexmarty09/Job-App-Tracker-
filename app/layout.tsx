@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
+import ThemeToggle from "@/components/ThemeToggle";
 import "./globals.css";
 
 const jetbrains = JetBrains_Mono({
@@ -18,9 +19,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={jetbrains.className}
-      >
+      <body className={jetbrains.className}>
+        <ThemeToggle />
         {children}
       </body>
     </html>
