@@ -28,7 +28,7 @@ export default function ThemeToggle() {
         <button 
         type="button"
         onClick={()=> setIsDark((prev)=> !prev)}
-        className="fixed top-4 right-4 z-50 border rounded-md px-3 py-2 text-sm"
+        className="border rounded-md px-3 py-2 text-sm"
         suppressHydrationWarning
         >
             {isDark ? "Light Mode" : "Dark Mode"}

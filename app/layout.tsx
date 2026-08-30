@@ -20,7 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={jetbrains.className}>
-        <ThemeToggle />
+        <div className="mx-auto flex w-full max-w-6xl justify-end px-4 pt-4">
+          <ThemeToggle />
+        </div>
         {children}
       </body>
     </html>
