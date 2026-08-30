@@ -1,5 +1,5 @@
 "use client"; 
-import { useState, useEffect, useRef } from "react"; 
+import { useState, useEffect, useRef, type FormEvent } from "react"; 
 import { useRouter } from "next/navigation";
 
 type Application = {
@@ -83,15 +83,12 @@ export default function Dashboard() {
 
     async function fetchApplications(currentOffset : number, isInitial = false) {
 
-        // debugging
-        console.log("Fetching offset", currentOffset); 
-        if(fetchingRef.current) return; 
-        fetchingRef.current = true; 
-
         //if((initialLoad || loadMore) || !hasMore) return; 
        
         if(initialLoad || loadMore) return; 
         if(!isInitial && !hasMore) return; 
+        if(fetchingRef.current) return; 
+        fetchingRef.current = true; 
 
         if(isInitial) {
             setInitialLoad(true); 
@@ -127,8 +124,6 @@ export default function Dashboard() {
             setStatusCounts(data.statusCounts); 
             setApplications((prev)=> [...prev, ...data.applications]);
             setOffset(currentOffset + limit);
-            
-            console.log(currentOffset);  
 
             if(!data.hasMore) {
                 setHasMore(false); 
@@ -153,7 +148,7 @@ export default function Dashboard() {
         }
     }
 
-    async function handleApplication(e: any) {
+    async function handleApplication(e: FormEvent<HTMLFormElement>) {
         e.preventDefault(); 
         setError("");
         setSaving(true)
@@ -221,7 +216,9 @@ export default function Dashboard() {
         
         if (!res.ok) {
             //throw new Error("Cannot delete data"); 
-            setError(data.error || "Canot delete data.")
+            setError(data.error || "Cannot delete data.")
+
+            return; 
         }
             
         //await fetchApplications(page); 
@@ -367,7 +364,7 @@ export default function Dashboard() {
     /*
     declare actual variables for the status cards here 
     */
-    const applicationsTotal = applications.length; 
+    const applicationsLoaded = applications.length; 
     
     // const appliedTotal = 3
     //     applications.filter((app)=> 
@@ -582,6 +579,7 @@ export default function Dashboard() {
 
             {initialLoad || !hasFetched ? 
             (   <p> Loading... </p> ) : 
+
             applications.length === 0 ? 
             (   <p className="text-red-600/80"> No applications yet. </p>):
         
@@ -591,7 +589,7 @@ export default function Dashboard() {
 
 
                 <h2 className="font-semibold text-2xl"> CURRENT APPLICATIONS </h2>
-                <h3 className="text-sm "> Loaded: <span className="text-green-300 font-semibold"> {applicationsTotal} </span></h3>
+                <h3 className="text-sm "> Loaded: <span className="text-green-300 font-semibold"> {applicationsLoaded} </span></h3>
                     <section className="top-sections">
                        
                         <input 
@@ -601,7 +599,6 @@ export default function Dashboard() {
                         placeholder="Search Company"
                         className="border rounded-md border-gray-400 p-1 my-1 placeholder:text-xs"
                         />
-{/* 
                         <select
                             className="border rounded-md border-gray-400 p-1 text-xs"
                             value={statusFilter}
@@ -614,23 +611,23 @@ export default function Dashboard() {
                             <option value="Offer">Offer</option>
                             <option value="Rejected">Rejected</option>
 
-                        </select> */}
+                        </select>
                         
                 </section>
                     {filteredApplications.map((app)=> (
                         <div className="border p-3 md:p-0 rounded-lg border-gray-300 shadow-sm md:border-none grid grid-cols-1 md:grid-cols-7 gap-3 md:gap-6 md:items-center" key={app.id}> 
                         <p> 
                             <span className="font-semibold"> Company: </span>
-                            <span className="text-green-700 wrap-break-word"> {app.company} </span> 
+                            <span className="text-green-700 break-words"> {app.company} </span> 
                         </p>
                         <p> 
-                            <span className="text-semibold"> Position: </span>
-                            <span className="text-green-700 wrap-break-word"> {app.position} </span> 
+                            <span className="font-semibold"> Position: </span>
+                            <span className="text-green-700 break-words"> {app.position} </span> 
                             </p>
                        
                         {/*<p> 
-                            <span className="text-semibold"> Pay:</span> 
-                            <span className="text-green-700 wrap-break-word"> {app.pay ?? "No pay listed"} </span> 
+                            <span className="font-semibold"> Pay:</span> 
+                            <span className="text-green-700 break-words"> {app.pay ?? "No pay listed"} </span> 
                         </p>*/}
 
                         <input
@@ -641,8 +638,8 @@ export default function Dashboard() {
                         />
 
                         <p> 
-                            <span className="text-semibold"> Location: </span>
-                            <span className="text-green-700 wrap-break-word"> {app.location} </span>
+                            <span className="font-semibold"> Location: </span>
+                            <span className="text-green-700 break-words"> {app.location} </span>
 
                         </p>
                         
@@ -661,7 +658,7 @@ export default function Dashboard() {
 
                         <p> 
                             <span className="font-semibold"> Added: </span>
-                            <span className="text-gray-500 wrap-break-word"> {new Date(app.created_at).toLocaleString()} </span>
+                            <span className="text-gray-500 break-words"> {new Date(app.created_at).toLocaleString()} </span>
                         </p>
 
                         <button className="delete-btn" onClick={()=> handleDelete(app.id)}> DELETE</button>

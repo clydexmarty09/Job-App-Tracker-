@@ -1,5 +1,5 @@
 "use client"; 
-import { useState } from "react"; 
+import { useState, type FormEvent } from "react"; 
 import { useRouter } from "next/navigation"; 
 import Link from "next/link";
 
@@ -39,7 +39,7 @@ export default function Register() {
         return null;
     }
 
-    async function handleSubmit(e: any) {
+    async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault(); 
         setError(""); 
         setLoading(true); 
@@ -47,6 +47,7 @@ export default function Register() {
         const trimmedEmail = email.trim().toLowerCase(); 
         if(!trimmedEmail) {
             setError("Email is required"); 
+            setLoading(false);  
             return; 
         }
 
@@ -81,8 +82,6 @@ export default function Register() {
                 setError(data.error || "Registration Failed")
                 return; 
             }
-
-            console.log(data); 
 
             router.push("/login"); 
 

@@ -1,5 +1,5 @@
 "use client"; 
-import { useState } from "react"; 
+import { useState, type FormEvent } from "react"; 
 import { useRouter } from "next/navigation";
 import Link from "next/link"; 
 
@@ -11,7 +11,7 @@ export default function Login() {
     const router = useRouter(); 
 
     // stop page refresh-> send email/password to backend-> wait for backend response-> if login failed, show error->if login succeed save user id -> go to dashboard 
-    async function handleSubmit(e: any) {
+    async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault(); // stops browser default form submission behavior  
         setError("");  // clears any old error message before new login attempt 
 
@@ -71,7 +71,7 @@ export default function Login() {
         
 
 
-          <p className="text-center text-xs text-gray-700 mt-auto p-5"> Don't have an account? <span> <Link className="text-blue-500/80 hover:underline" href="/register"> Register </Link> instead </span> </p>
+          <p className="text-center text-xs text-gray-700 mt-auto p-5"> Don&apos;t have an account? <span> <Link className="text-blue-500/80 hover:underline" href="/register"> Register </Link> instead </span> </p>
         </main>
 
     ); 

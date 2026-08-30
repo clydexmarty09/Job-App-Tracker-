@@ -4,7 +4,6 @@
 import bcrypt from "bcrypt";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
-import type { RowDataPacket } from "mysql2";
 
 // type UserRow = RowDataPacket & {
 //   email: string;
@@ -66,7 +65,7 @@ export async function POST(request: Request) {
       FROM users
       WHERE email = $1
       LIMIT 1`,
-      [email],
+      [trimmed],
     );
 
     if (userExists.rows.length > 0) {
@@ -84,7 +83,7 @@ export async function POST(request: Request) {
     await db.query(
       `INSERT INTO users(id, email, password_hash)
         VALUES ($1, $2, $3)`,
-      [uid, email, pw_hash],
+      [uid, trimmed, pw_hash],
     );
 
     return NextResponse.json({ ok: true });

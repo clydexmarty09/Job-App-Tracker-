@@ -18,7 +18,7 @@ export async function POST() {
       );
     }
 
-    const response = NextResponse.json({ message: "Logged out succesfully " });
+    const response = NextResponse.json({ message: "Logged out successfully" });
 
     // clear the cookie in the browser
     response.cookies.set("sessionId", "", {

@@ -13,9 +13,6 @@ export async function GET(request: Request) {
     const limitParam = searchParams.get("limit");
     const offsetParam = searchParams.get("offset");
 
-    // get page from ?page
-    const pageParam = searchParams.get("page");
-
     //convert to Number - default to 1
     //const page = Number(pageParam) || 1;
 
@@ -58,7 +55,6 @@ export async function GET(request: Request) {
     );
 
     const totalCount = Number(countRes.rows[0].total);
-    const totalPages = Math.ceil(totalCount / limit);
 
     // check how applications are in each status
     const statusCountRes = await db.query(
