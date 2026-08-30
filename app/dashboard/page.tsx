@@ -369,7 +369,7 @@ export default function Dashboard() {
     */
     const applicationsTotal = applications.length; 
     
-    // const appliedTotal = 
+    // const appliedTotal = 3
     //     applications.filter((app)=> 
     //         app.status === "Applied").length; 
 
@@ -590,7 +590,8 @@ export default function Dashboard() {
 
 
 
-                <h2 className="font-semibold text-2xl tex-center"> CURRENT APPLICATIONS </h2>
+                <h2 className="font-semibold text-2xl"> CURRENT APPLICATIONS </h2>
+                <h3 className="text-sm "> Loaded: <span className="text-green-300 font-semibold"> {applicationsTotal} </span></h3>
                     <section className="top-sections">
                        
                         <input 
