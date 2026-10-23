@@ -1,5 +1,13 @@
 A full-stack job application tracker built with Next.js, TypeScript, and MariaDB. Features secure authentication, RESTful APIs, and a responsive UI for managing and tracking job applications in real time.
 
+---
+
+A dummy account has been created for demonstration purposes.
+Email : demo@demo.com
+Password: Pass12345
+
+---
+
 - Features:
   - Authentication system
     - Secure user registration and login
