@@ -186,7 +186,12 @@ export default function Dashboard() {
             setStatus("")
             setPay("")
             setLocation("");
-            
+
+            // Show the new entry even when it falls outside the current filters.
+            setStatusFilter("");
+            setCompanySearch("");
+            setStartDate("");
+            setEndDate("");
 
             await refresh(); 
         } catch {
