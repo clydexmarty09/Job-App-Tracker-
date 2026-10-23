@@ -43,6 +43,8 @@ export default function Dashboard() {
     const [loadMore, setLoadMore] = useState(false); 
     const [hasFetched, setHasFetched] = useState(false); 
     const [saving, setSaving] = useState(false); 
+    const [formError, setFormError] = useState("");
+    const [saveMessage, setSaveMessage] = useState("");
     //console.log(applications.length);
     
     // for filtering/searching 
@@ -150,7 +152,8 @@ export default function Dashboard() {
 
     async function handleApplication(e: FormEvent<HTMLFormElement>) {
         e.preventDefault(); 
-        setError("");
+        setFormError("");
+        setSaveMessage("");
         setSaving(true)
         // setLoading(true);  
 
@@ -177,7 +180,7 @@ export default function Dashboard() {
             const data = await res.json(); 
 
             if(!res.ok) {
-                setError(data.error || "Failed to create applications"); 
+                setFormError(data.error || "Failed to create application. Please try again.");
                 return; 
             }
 
@@ -192,10 +195,11 @@ export default function Dashboard() {
             setCompanySearch("");
             setStartDate("");
             setEndDate("");
+            setSaveMessage(`${company} was added with status ${status}.`);
 
             await refresh(); 
         } catch {
-            setError("Failed to create applications")
+            setFormError("Failed to create application. Please check your connection and try again.")
         } finally {
             //setLoading(false);
             setTimeout(()=> {
@@ -521,13 +525,23 @@ export default function Dashboard() {
                 </button>
 
                 {showForm && (
-                    <form className="grid grid-cols-1 md:grid-cols-6 gap-3" onSubmit={handleApplication}> 
+                    <form className="grid grid-cols-1 md:grid-cols-6 gap-3" onSubmit={handleApplication}
+                        onInvalid={(e) => {
+                            const field = e.target as HTMLInputElement | HTMLSelectElement;
+                            setSaveMessage("");
+                            setFormError(`${field.getAttribute("aria-label") || "Field"}: ${field.validationMessage}`);
+                        }}
+                        onChange={() => { setFormError(""); setSaveMessage(""); }}
+                    >
+                        {formError && <p role="alert" className="md:col-span-6 text-red-500">{formError}</p>}
+                        {saveMessage && <p role="status" className="md:col-span-6">{saveMessage}</p>}
                 
                         <input
                         className="border border-gray-400 rounded p-2"
                         value={company}
                         type="text"
                         placeholder="Insert company"
+                        aria-label="Company"
                         required
                         onChange={(e)=> setCompany(e.target.value)}
                         />
@@ -538,6 +552,7 @@ export default function Dashboard() {
                         value={position}
                         type="text"
                         placeholder="Insert position"
+                        aria-label="Position"
                         required
                         onChange={(e)=> setPosition(e.target.value)}
                         />
@@ -547,6 +562,8 @@ export default function Dashboard() {
                         className="border border-gray-400 rounded p-2"
                         value={pay}
                         type="number"
+                        step="any"
+                        aria-label="Pay"
                         placeholder="Insert pay"
                         onChange={(e)=> setPay(e.target.value)}
                         /> 
@@ -561,6 +578,7 @@ export default function Dashboard() {
                         <select
                         className={`border border-gray-400 p-2 rounded ${getStatusColor(status)}`}
                         value={status}
+                        aria-label="Application status"
                         onChange={(e)=> setStatus(e.target.value)}
                         required
                         >
