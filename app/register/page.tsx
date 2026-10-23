@@ -1,5 +1,5 @@
 "use client"; 
-import { useEffect, useState } from "react"; 
+import { useState, type FormEvent } from "react"; 
 import { useRouter } from "next/navigation"; 
 import Link from "next/link";
 
@@ -11,10 +11,59 @@ export default function Register() {
     const [email, setEmail] = useState(""); 
     const [password, setPassword] = useState(""); 
 
-    async function handleSubmit(e: any) {
+
+
+    function isValidEmail(email: string) {
+        const trimmed = email.trim().toLowerCase();
+
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed);
+        }
+
+    function isValidPassword(pw: string) {
+        if (pw.length < 8) {
+            return "Password must be at least 8 characters long";
+        }
+
+        if (!/[a-z]/.test(pw)) {
+            return "Password must contain at least one lowercase letter";
+        }
+
+        if (!/[A-Z]/.test(pw)) {
+            return "Password must contain at least one uppercase letter";
+        }
+
+        if (!/[0-9]/.test(pw)) {
+            return "Password must contain at least one number";
+        }
+
+        return null;
+    }
+
+    async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault(); 
         setError(""); 
         setLoading(true); 
+
+        const trimmedEmail = email.trim().toLowerCase(); 
+        if(!trimmedEmail) {
+            setError("Email is required"); 
+            setLoading(false);  
+            return; 
+        }
+
+        if(!isValidEmail(trimmedEmail)) {
+            setError("Invalid Email"); 
+            setLoading(false);  
+            return;
+          
+        }
+
+        const badPassWord = isValidPassword(password); 
+        if(badPassWord) {
+            setError(badPassWord);
+            setLoading(false);  
+            return; 
+        }
 
         try {
 
@@ -24,7 +73,7 @@ export default function Register() {
                     "Content-Type": "application/json", 
                 }, 
                 body: JSON.stringify({
-                    email, password, 
+                    email:trimmedEmail, password, 
                 }), 
             }); 
 
@@ -33,8 +82,6 @@ export default function Register() {
                 setError(data.error || "Registration Failed")
                 return; 
             }
-
-            console.log(data); 
 
             router.push("/login"); 
 
@@ -47,31 +94,40 @@ export default function Register() {
     }
 
     return(
-        <main className="min-h-screen m-auto p-4 flex flex-col items-center"> 
+     <main className="landing-page">
+        {/*flex-1 expands to fill all the remaining vertical space */}
+        <div className="landing-page-outer-div">
+         <div className="landing-page-inner-div">
             <h1 className="text-2xl font-medium p-3"> REGISTER </h1>
-            <form className="p-4 flex gap-20" onSubmit={handleSubmit}> 
+   
+            <form className="form-preset" onSubmit={handleSubmit}> 
                 <input
-                className="border rounded-md p-2 border-gray-300"
+                className="form-input"
                 placeholder="Email"
                 value={email}
                 type="email"
                 onChange={(e)=> setEmail(e.target.value)}
                 />
                 <input
-                className="border rounded-md p-2 border-gray-300"
+                className="form-input"
                 placeholder="Password"
                 value={password}
                 type="password"
                 onChange={(e)=> setPassword(e.target.value)}
                 />
-                <button className="hover:scale-105 transition w-40 border rounded border-gray-500 bg-blue-300/60 p-3" type="submit" disabled={loading}> 
+                <button className="btn-1" type="submit" disabled={loading}> 
                 {loading ? "Registering..." : "Register"}
                 </button>
             </form>
+            
 
-            <p className="text-xs text-gray-700 mt-auto p-5"> Have an account? <span> <Link className="text-blue-500/80 hover:underline" href="/login"> Log In </Link> instead </span> </p>
+            
+            {error && <p className="text-red-400 text-sm"> {error} </p>}
+            </div>
+            </div>
 
-            {error && <p> {error} </p>}
+            <p className="text-center text-xs text-gray-700 mt-auto p-5"> Have an account? <span> <Link className="text-blue-500/80 hover:underline" href="/login"> Log In </Link> instead </span> </p>
+
         </main>
 
     ); 

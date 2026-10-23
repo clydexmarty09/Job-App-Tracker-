@@ -5,6 +5,36 @@ import bcrypt from "bcrypt";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
+// type UserRow = RowDataPacket & {
+//   email: string;
+// };
+
+function isValidEmail(email: string) {
+  const trimmed = email.trim().toLowerCase();
+
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed);
+}
+
+function isValidPassword(pw: string) {
+  if (pw.length < 8) {
+    return "Password must be at least 8 characters long";
+  }
+
+  if (!/[a-z]/.test(pw)) {
+    return "Password must contain at least one lowercase letter";
+  }
+
+  if (!/[A-Z]/.test(pw)) {
+    return "Password must contain at least one uppercase letter";
+  }
+
+  if (!/[0-9]/.test(pw)) {
+    return "Password must contain at least one number";
+  }
+
+  return null;
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -18,13 +48,42 @@ export async function POST(request: Request) {
       );
     }
 
+    const trimmed = email.trim().toLowerCase();
+    if (!isValidEmail(trimmed)) {
+      return NextResponse.json({ error: "Email is invalid" }, { status: 400 });
+    }
+
+    const badPassword = isValidPassword(password);
+
+    if (badPassword) {
+      return NextResponse.json({ error: badPassword }, { status: 400 });
+    }
+
+    // validation check if user exists?
+    const userExists = await db.query(
+      `SELECT email
+      FROM users
+      WHERE email = $1
+      LIMIT 1`,
+      [trimmed],
+    );
+
+    if (userExists.rows.length > 0) {
+      return NextResponse.json(
+        {
+          error: "User already exists!",
+        },
+        { status: 409 }, // 409 is code for conflict ( resource alread exists )
+      );
+    }
+
     const pw_hash = await bcrypt.hash(password, 10);
     //const created_at = Date.now() not needed because SQL table already has it
 
-    await db.execute(
+    await db.query(
       `INSERT INTO users(id, email, password_hash)
-        VALUES (?, ?, ?)`,
-      [uid, email, pw_hash],
+        VALUES ($1, $2, $3)`,
+      [uid, trimmed, pw_hash],
     );
 
     return NextResponse.json({ ok: true });

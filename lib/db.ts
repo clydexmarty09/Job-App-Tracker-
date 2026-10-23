@@ -1,8 +1,15 @@
-import mysql from "mysql2/promise";
+import { Pool } from "pg";
 
-export const db = mysql.createPool({
-  host: "localhost",
-  user: "job_tracker_user",
-  password: "mypassword123",
-  database: "job_tracker",
-});
+declare global {
+  var _pgPool: Pool | undefined;
+}
+
+export const db =
+  global._pgPool ??
+  new Pool({
+    connectionString: process.env.DATABASE_URL,
+  });
+
+if (process.env.NODE_ENV !== "production") {
+  global._pgPool = db;
+}
